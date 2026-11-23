@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f7f4">
+  <link rel="icon" type="image/png" href="assets/site-logo-128.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/site-logo-180.png">
+  <title>dancee · nono &amp; txx</title>
+  <link rel="stylesheet" href="assets/page-transitions.css?v=20261123b">
+  <link rel="stylesheet" href="assets/video-collection.css?v=20261120a">
+</head>
+<body>
+  <header class="topbar"><button class="back" id="back" type="button">← 返回</button><div class="brand"><img src="assets/site-logo-128.png" alt=""><span>nono &amp; txx</span></div><button class="manage" id="manage" type="button" aria-pressed="false">管理</button></header>
+  <main><section class="collection-head"><div><h1>dancee</h1></div><div class="head-side"><p>把喜欢的舞蹈和节奏，收进同一个收藏里。</p><span class="count" id="count">00 FILMS</span></div></section><div class="grid" id="grid"></div><p class="empty" id="empty"><span>这里还没有 dancee<br>从 Video 页面添加第一条链接。<br><a class="empty-action" href="video.html#dance-title">去添加视频 →</a></span></p></main>
+  <script src="assets/video-library.js?v=20261109f"></script>
+  <script>
+    const grid=document.getElementById('grid');const empty=document.getElementById('empty');const manage=document.getElementById('manage');const count=document.getElementById('count');
+    function paint(card,item,index){const cover=card.querySelector('.cover');const old=cover.querySelector('img,.link-cover');if(item.cover){const image=document.createElement('img');image.src=item.cover;image.alt=`${VideoLibrary.title(item)} 封面`;image.referrerPolicy='no-referrer';image.loading=index<4?'eager':'lazy';image.decoding='async';if(index===0)image.fetchPriority='high';old.replaceWith(image)}else old.textContent=VideoLibrary.isDouyin(item.url)?'＋ 封面':new URL(item.url).hostname.replace(/^www\./,'');card.querySelector('h2').textContent=VideoLibrary.title(item)}
+    function render(){grid.innerHTML='';const items=VideoLibrary.read().dancee;items.forEach((item,index)=>{const wrapper=document.createElement('div');wrapper.className='item';wrapper.innerHTML='<button class="delete" type="button">×</button><a class="card" target="_blank" rel="noopener noreferrer"><div class="cover"><div class="link-cover"></div><span class="mark">↗</span></div><h2></h2></a>';const card=wrapper.querySelector('.card');const title=VideoLibrary.title(item);const deleteButton=wrapper.querySelector('.delete');card.href=item.url;deleteButton.setAttribute('aria-label',`删除${title}`);paint(card,item,index);card.addEventListener('click',async event=>{if(!item.cover&&VideoLibrary.isDouyin(item.url)){event.preventDefault();const cover=await VideoLibrary.pickCover();if(cover){item.cover=cover;VideoLibrary.setCover('dancee',item.id,cover);paint(card,item,index)}}});VideoLibrary.enrich('dancee',item).then(updated=>{paint(card,updated,index);deleteButton.setAttribute('aria-label',`删除${VideoLibrary.title(updated)}`)});deleteButton.addEventListener('click',()=>{if(confirm(`确定从本网站删除“${VideoLibrary.title(item)}”吗？`)){VideoLibrary.remove('dancee',item.id);render()}});grid.append(wrapper)});empty.hidden=items.length>0;count.textContent=`${String(items.length).padStart(2,'0')} FILMS`;manage.hidden=items.length===0;if(!items.length){grid.classList.remove('managing');manage.setAttribute('aria-pressed','false');manage.textContent='管理'}}
+    manage.addEventListener('click',()=>{const active=!grid.classList.contains('managing');grid.classList.toggle('managing',active);manage.setAttribute('aria-pressed',active);manage.textContent=active?'完成':'管理'});
+    document.getElementById('back').addEventListener('click',()=>{let fromVideo=false;try{fromVideo=new URL(document.referrer).pathname.endsWith('/video.html')}catch{}if(fromVideo&&history.length>1)history.back();else location.replace('video.html')});
+    render();
+  </script>
+  <script src="assets/music-continuation.js?v=20261109e"></script>
+</body>
+</html>

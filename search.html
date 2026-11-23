@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f7f4">
+  <title>搜索 · nono & txx</title>
+  <link rel="stylesheet" href="assets/page-transitions.css?v=20261123b">
+  <style>
+    :root{--ink:var(--ui-ink);--muted:var(--ui-muted);--line:var(--ui-line);--paper:var(--ui-bg);--accent:var(--ui-accent)}*{box-sizing:border-box}html{background:var(--paper)}body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--ui-font-sans)}.top{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:var(--ui-header-height);padding:0 var(--ui-page-gutter);border-bottom:1px solid var(--line);background:rgba(248,247,244,.96)}button{font:inherit}.back{justify-self:start;min-height:44px;padding:0;border:0;color:var(--muted);background:none;font-size:12px;cursor:pointer}.brand{display:flex;gap:9px;align-items:center;font:600 17px/1 var(--ui-font-display);letter-spacing:-.025em}.brand img{width:24px;height:24px;object-fit:contain}.shell{width:min(960px,calc(100% - 56px));margin:auto;padding:clamp(72px,9vw,112px) 0 110px}.title{margin:0;font:500 clamp(48px,6vw,72px)/1.02 var(--ui-font-display);letter-spacing:-.04em}.lead{max-width:480px;margin:21px 0 44px;color:var(--muted);font-size:13px;line-height:1.8}.search-box{position:relative}.search-box input{width:100%;height:62px;padding:0 54px 0 20px;color:var(--ink);border:1px solid var(--line);border-radius:10px;outline:0;background:var(--ui-surface);font-size:16px;box-shadow:none;transition:border-color .2s,box-shadow .2s}.search-box input:focus{border-color:rgba(29,29,31,.24);box-shadow:var(--ui-shadow-card)}.search-box svg{position:absolute;top:20px;right:20px;width:21px;height:21px;fill:none;stroke:var(--muted);stroke-width:1.5}.summary{display:flex;justify-content:space-between;margin:19px 2px 25px;color:var(--muted);font:12px/1 var(--ui-font-sans);letter-spacing:.03em}.results{border-top:1px solid var(--line)}.result{display:grid;grid-template-columns:96px 1fr auto 22px;gap:22px;align-items:center;min-height:112px;padding:23px 6px;border-bottom:1px solid var(--line);color:inherit;text-decoration:none;transition:background .2s,transform .22s var(--ui-ease-out)}.result:hover{background:var(--ui-surface);transform:translateY(-1px)}.result:focus-visible{background:var(--ui-surface);outline:2px solid var(--ui-focus);outline-offset:3px;transform:translateY(-1px)}.result-type{color:var(--accent);font:650 12px/1 var(--ui-font-sans);letter-spacing:.04em}.result h2{margin:0 0 8px;font:500 20px/1.2 var(--ui-font-display)}.result p{max-width:610px;margin:0;overflow:hidden;color:var(--muted);font-size:13px;line-height:1.6;text-overflow:ellipsis;white-space:nowrap}.result time{color:var(--muted);font:12px/1 var(--ui-font-sans);font-variant-numeric:tabular-nums}.arrow{color:var(--muted);font-size:19px}.empty{padding:70px 0;border-bottom:1px solid var(--line);color:var(--muted);text-align:center;font-size:13px}.empty b{display:block;margin-bottom:10px;color:var(--ink);font:500 25px var(--ui-font-display)}@media(max-width:650px){.top{padding-inline:18px}.brand{display:none}.shell{width:calc(100% - 34px);padding-top:55px}.lead{margin-bottom:32px}.result{grid-template-columns:72px 1fr;gap:12px}.result time{display:none}.arrow{display:none}}@media(max-width:380px){.summary span:last-child{display:none}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="top"><button class="back" id="back" type="button">← 返回</button><div class="brand"><img src="assets/site-logo-128.png" alt=""><span>nono &amp; txx</span></div><span></span></header>
+  <main class="shell">
+    <h1 class="title">搜索</h1>
+    <p class="lead">在回忆、地点、日期和视频名称中，找到你们留下的内容。</p>
+    <label class="search-box"><span hidden>搜索内容</span><input id="query" type="search" placeholder="试试输入地点、年份或视频名称" autocomplete="off" autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5"></circle><path d="m16 16 4.2 4.2"></path></svg></label>
+    <div class="summary"><span id="status">正在读取档案</span><span>MEMORIES · DATES · VIDEO</span></div>
+    <section class="results" id="results" aria-live="polite"><div class="ui-state ui-state--loading"><span class="ui-state__line" aria-hidden="true"></span><h2 class="ui-state__title">正在整理档案</h2><p class="ui-state__copy">回忆、日期和视频会一起出现在这里。</p></div></section>
+  </main>
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+  <script src="assets/cloudbase-dates-config.js?v=20261026b"></script>
+  <script src="assets/cloudbase-config.js?v=20261026c"></script>
+  <script src="assets/cloudbase-client.js?v=20261028e"></script>
+  <script src="assets/cloud-memory-library.js?v=20261026c"></script>
+  <script src="assets/cloudbase-dates-client.js?v=20261026b"></script>
+  <script src="assets/video-library.js?v=20261109f"></script>
+  <script>
+    const $=id=>document.getElementById(id),esc=value=>String(value||'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+    const normalize=value=>String(value||'').trim().toLocaleLowerCase('zh-CN');
+    const matches=(value,query)=>normalize(query).split(/\s+/).filter(Boolean).every(word=>normalize(value).includes(word));
+    const sortable=date=>String(date||'').replaceAll('.','-');
+    const formatDate=date=>String(date||'').replaceAll('-','.');
+    const memorySearchItem=item=>{
+      const photo=item.kind==='photo',captions=(item.images||[]).map(image=>image.caption).filter(Boolean).join(' · '),description=photo?(captions||'一张回忆照片'):[item.place,item.story,captions].filter(Boolean).join(' · ');
+      return {type:photo?'照片':'回忆',title:item.title||(photo?'一张照片':'未命名回忆'),date:item.date,description,search:[item.title,item.place,item.story,captions,item.date,formatDate(item.date)].join(' '),href:photo?`memories.html?photo=${encodeURIComponent(item.id)}`:`memories.html?event=${encodeURIComponent(item.id)}`};
+    };
+    let items=[],unavailableSources=[];
+    const stateMarkup=(kind,title,copy,retry=false)=>`<div class="ui-state ui-state--${kind}" role="${kind==='error'?'alert':'status'}"><span class="ui-state__line" aria-hidden="true"></span><h2 class="ui-state__title">${esc(title)}</h2><p class="ui-state__copy">${esc(copy)}</p>${retry?'<button class="ui-state__action" id="searchRetry" type="button">重新读取</button>':''}</div>`;
+    console.assert(matches('上海 2026.10.01','上海 2026')&&!matches('上海','北京'),'统一搜索匹配异常');
+    console.assert((()=>{const photo=memorySearchItem({id:'1',kind:'photo',title:'海边',date:'2026-10-01',images:[{caption:'日落'}]});return photo.search.includes('日落')&&photo.href==='memories.html?photo=1'})(),'独立照片搜索索引或深链接异常');
+
+    async function load(){
+      $('status').textContent='正在读取档案';
+      $('results').innerHTML=stateMarkup('loading','正在整理档案','回忆、日期和视频会一起出现在这里。');
+      const memoryState=MemoryLibrary.status(),dateState=CloudBaseDatesClient.status();
+      const [memoryResult,dateResult]=await Promise.allSettled([
+        memoryState.ready?MemoryLibrary.all():Promise.reject(new Error(memoryState.reason||'CloudBase 回忆尚未连接')),
+        dateState.ready?CloudBaseDatesClient.call('listDates'):Promise.reject(new Error(dateState.reason||'CloudBase 日期尚未连接'))
+      ]);
+      unavailableSources=[];
+      if(memoryResult.status==='rejected')unavailableSources.push('回忆');
+      if(dateResult.status==='rejected')unavailableSources.push('日期');
+      const sharedMemories=memoryResult.status==='fulfilled'&&Array.isArray(memoryResult.value)?memoryResult.value:[];
+      const sharedDates=dateResult.status==='fulfilled'&&Array.isArray(dateResult.value)?dateResult.value:[];
+      const memories=sharedMemories.map(memorySearchItem);
+      const videos=VideoLibrary.read(),videoItems=['vlog','dancee'].flatMap(category=>videos[category].map(item=>{const title=VideoLibrary.title(item);return {type:'视频',title,date:item.date,description:category==='vlog'?'VLOG':'DANCE',search:[title,item.date,category].join(' '),href:item.url||'video.html',external:Boolean(item.url)}}));
+      const important=[{id:'anniversary',title:'在一起的第一天',date:'2025-09-17',note:'nono & txx'},...sharedDates].map(item=>({type:'日期',title:item.title||'重要日期',date:item.date,description:item.note||'',search:[item.title,item.note,item.date,formatDate(item.date)].join(' '),href:'dates.html#archive'}));
+      items=[...memories,...important,...videoItems].sort((a,b)=>sortable(b.date).localeCompare(sortable(a.date)));
+      render();
+    }
+    function render(){
+      const query=$('query').value,visible=query.trim()?items.filter(item=>matches(item.search,query)):items;
+      const base=query.trim()?`找到 ${visible.length} 条结果`:`共 ${visible.length} 条内容`;
+      $('status').textContent=unavailableSources.length?`${base} · ${unavailableSources.join('、')}暂不可用`:base;
+      if(!visible.length){
+        const filtered=Boolean(query.trim());
+        $('results').innerHTML=stateMarkup('empty',filtered?'没有找到匹配内容':'档案里还没有可搜索的内容',filtered?'换一个关键词、地点或年份试试。':unavailableSources.length?'部分共享资料暂时无法读取，可以稍后重新进入。':'添加回忆、日期或视频后，它们会在这里统一出现。');
+        return;
+      }
+      $('results').innerHTML=visible.map(item=>`<a class="result" href="${esc(item.href)}"${item.external?' target="_blank" rel="noopener noreferrer"':''}><span class="result-type">${item.type}</span><div><h2>${esc(item.title)}</h2><p>${esc(item.description||'打开查看')}</p></div><time>${esc(formatDate(item.date))}</time><span class="arrow" aria-hidden="true">↗</span></a>`).join('');
+    }
+    $('query').addEventListener('input',render);
+    $('back').onclick=()=>{if(sessionStorage.getItem('nono-index-parent')==='1'&&history.length>1){sessionStorage.removeItem('nono-index-parent');sessionStorage.setItem('nono-index-reset','1');history.back()}else location.replace('index.html')};
+    function showLoadError(error){$('status').textContent='档案读取失败';$('results').innerHTML=stateMarkup('error','暂时无法读取档案',error?.message||'网络或云端服务暂时不可用，请稍后重试。',true);$('searchRetry').onclick=()=>load().catch(showLoadError)}
+    load().catch(showLoadError);
+  </script>
+  <script src="assets/music-continuation.js?v=20261109e"></script>
+</body>
+</html>

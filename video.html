@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f7f4">
+  <link rel="icon" type="image/png" href="assets/site-logo-128.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/site-logo-180.png">
+  <link rel="stylesheet" href="assets/page-transitions.css?v=20261123b">
+  <title>Video · nono &amp; txx</title>
+  <style>
+    :root{--paper:#f5f5f7;--ink:#1d1d1f;--muted:#86868b;--line:rgba(29,29,31,.1);--accent:#a45d63}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{min-height:100vh;margin:0;color:var(--ink);background:radial-gradient(circle at 88% 9%,rgba(164,93,99,.075),transparent 26rem),var(--paper);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Serif SC",sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    .topbar{position:sticky;top:0;z-index:10;display:grid;height:68px;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 clamp(22px,5vw,76px);background:rgba(245,245,247,.84);box-shadow:0 12px 34px rgba(29,29,31,.035);backdrop-filter:saturate(180%) blur(20px)}
+    .back{justify-self:start;padding:8px 0;border:0;color:#626762;background:none;font:500 12px/1.2 inherit;letter-spacing:.12em;cursor:pointer;transition:color .2s,transform .2s}
+    .back:hover{color:var(--ink);transform:translateX(-3px)}
+    .brand{display:flex;align-items:center;gap:9px;font-family:Georgia,"Times New Roman",serif;font-size:19px;font-style:italic;letter-spacing:.02em}
+    .brand img{width:28px;height:28px;object-fit:contain}
+    .archive-label{justify-self:end;color:#9a9a9f;font:600 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em}
+    main{width:min(1480px,calc(100% - 44px));margin:0 auto;padding:clamp(36px,5vw,68px) 0 110px}
+    .hero{position:relative;isolation:isolate;display:flex;min-height:clamp(370px,48vw,590px);flex-direction:column;justify-content:space-between;overflow:hidden;padding:clamp(28px,5vw,68px);border:1px solid var(--line);border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(244,238,239,.62));box-shadow:0 28px 90px rgba(29,29,31,.05)}
+    .hero-meta{display:flex;justify-content:space-between;color:#85858a;font:600 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.22em}
+    .hero-copy{align-self:flex-start}
+    .eyebrow{margin:0 0 14px;color:var(--accent);font:600 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.24em;text-transform:uppercase}
+    h1{margin:0;font:italic 400 clamp(78px,13vw,188px)/.78 Georgia,"Times New Roman",serif;letter-spacing:-.06em}
+    .section{margin-top:86px}
+    .section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+    .section-heading h2{margin:0;font:500 clamp(26px,4vw,40px)/1 Georgia,"Times New Roman","Songti SC",serif;letter-spacing:.04em}
+    .more-link{padding:7px 13px;border:1px solid var(--line);border-radius:999px;color:#85858a;font-size:10px;letter-spacing:.12em;text-decoration:none;transition:color .2s,border-color .2s,transform .2s}
+    .more-link:hover{color:var(--ink);border-color:rgba(36,38,36,.3);transform:translateX(2px)}
+    .video-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(14px,1.8vw,26px)}
+    .video-card{display:block;text-decoration:none;transition:transform .45s cubic-bezier(.2,.75,.2,1)}
+    .cover{position:relative;overflow:hidden;aspect-ratio:16/10;border-radius:14px;background:#eeeef0;box-shadow:0 12px 32px rgba(29,29,31,.055)}
+    .cover img{width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.2,.7,.2,1),filter .35s}
+    .open-mark{display:none}
+    .video-card:hover{transform:translateY(-5px)}
+    .video-card:hover .cover img{transform:scale(1.035);filter:brightness(.94)}
+    .card-info{position:absolute;z-index:2;right:0;bottom:0;left:0;padding:58px 14px 14px;color:#fff;background:linear-gradient(180deg,transparent,rgba(16,16,18,.76));pointer-events:none}
+    .card-title{margin:0;font-size:15px;font-weight:650;line-height:1.35;letter-spacing:.005em;text-shadow:0 1px 12px rgba(0,0,0,.24)}
+    .add-card{position:relative;display:grid;place-items:center;overflow:hidden;aspect-ratio:16/9;border:1px dashed rgba(164,93,99,.22);border-radius:12px;background:linear-gradient(135deg,rgba(244,236,237,.34),rgba(255,255,255,.68));color:#a3a3a8;font:300 28px/1 Georgia,serif;cursor:pointer;transition:color .2s,border-color .2s,background .2s,transform .35s}
+    .add-card::after{position:absolute;inset:0;background:linear-gradient(110deg,transparent 32%,rgba(255,255,255,.82) 49%,transparent 66%);content:"";transform:translateX(-130%);transition:transform .7s ease}
+    .add-card:hover{color:#fff;border-color:var(--accent);background:var(--accent);box-shadow:0 16px 38px rgba(164,93,99,.18);transform:translateY(-3px)}
+    .add-card:hover::after{transform:translateX(130%)}
+    .video-card,.add-card{animation:card-in .68s backwards;animation-delay:calc(var(--order,0)*45ms)}
+    .link-cover{display:grid;place-items:center;width:100%;height:100%;padding:18px;color:#818186;background:linear-gradient(145deg,#f0f0f2,#fff);font:500 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-align:center;overflow-wrap:anywhere}
+    .dialog{width:min(420px,calc(100% - 32px));padding:0;border:0;border-radius:18px;color:var(--ink);background:#fff;box-shadow:0 24px 80px rgba(30,35,30,.16)}
+    .dialog::backdrop{background:rgba(30,34,30,.24);backdrop-filter:blur(5px)}
+    .dialog-form{padding:28px}
+    .dialog-form h3{margin:0;font:400 28px/1.2 Georgia,"Times New Roman",serif}
+    .dialog-form p{margin:9px 0 22px;color:#919691;font-size:12px;letter-spacing:.06em}
+    .field{display:block;margin-top:15px;color:#777d77;font-size:11px;letter-spacing:.08em}
+    .field input{display:block;width:100%;margin-top:8px;padding:12px 13px;border:1px solid var(--line);border-radius:9px;background:#fbfcfb;color:var(--ink);font:400 13px/1.4 inherit;outline:none}
+    .field input[type="file"]{padding:9px;font-size:11px;color:#8b918c}
+    .manual-cover{cursor:pointer}.manual-cover::after{content:"＋ 封面";font-size:10px;letter-spacing:.12em}
+    .field input:focus{border-color:rgba(164,93,99,.6)}
+    .dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:24px}
+    .dialog-actions button{padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#747a74;font:500 11px/1 inherit;cursor:pointer}
+    .dialog-actions .save{border-color:var(--ink);color:#fff;background:var(--ink)}
+    .dialog-form .dialog-error{min-height:18px;margin:12px 0 0;color:var(--accent);font-size:11px;line-height:1.55;letter-spacing:0}
+    .dialog-actions button:disabled{opacity:.55;cursor:wait}
+    .random-section{position:relative;display:grid;grid-template-columns:1fr auto;align-items:end;gap:30px;min-height:250px;margin-top:clamp(96px,13vw,180px);padding:clamp(30px,5vw,66px);overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .random-meta{display:flex;flex-direction:column;gap:17px;color:#949a94;font:600 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.22em}
+    .random-meta strong{color:var(--ink);font:italic 400 clamp(38px,6vw,76px)/1 Georgia,"Times New Roman",serif;letter-spacing:-.03em}
+    .random-play{position:relative;z-index:1;display:flex;align-items:center;gap:34px;padding:13px 4px;border:0;border-bottom:1px solid rgba(36,38,36,.34);color:var(--ink);background:none;font:500 13px/1 inherit;letter-spacing:.13em;cursor:pointer;transition:gap .3s,border-color .3s}
+    .random-play:hover{gap:42px;border-color:var(--accent)}
+    .random-play span:last-child{font-size:17px;transition:transform .3s}
+    .random-play:hover span:last-child{transform:translate(3px,-3px)}
+    .reveal-section{opacity:1;transform:none}
+    @keyframes card-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    button:focus-visible,a:focus-visible{outline:1px solid var(--accent);outline-offset:5px}
+    @media(max-width:1100px){.video-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:680px){.topbar{height:64px;padding:0 20px}.archive-label{display:none}main{width:min(100% - 32px,1120px);padding-top:24px}.hero{min-height:390px;padding:25px;border-radius:20px}.video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}.section{margin-top:68px}.card-title{font-size:13px}.random-section{grid-template-columns:1fr;align-items:start;min-height:230px;padding:34px 6px}.random-play{justify-self:start}}
+    @media(max-width:340px){.video-grid{grid-template-columns:1fr}}
+
+    /* Restrained product treatment: content first, one accent, no ornamental loops. */
+    :root{--paper:var(--ui-bg);--card:var(--ui-surface);--ink:var(--ui-ink);--muted:var(--ui-muted);--line:var(--ui-line);--accent:var(--ui-accent)}
+    body{background:var(--paper)}
+    .topbar{height:var(--ui-header-height);padding:0 var(--ui-page-gutter);border-bottom:1px solid var(--line);background:rgba(248,247,244,.96);box-shadow:none;backdrop-filter:none}
+    .brand{font:600 17px/1 var(--ui-font-display);letter-spacing:-.025em}.brand img{width:24px;height:24px}
+    .back:hover{transform:translateX(-2px)}
+    main{width:min(1280px,calc(100% - 96px));padding:clamp(50px,6vw,82px) 0 112px}
+    .hero{min-height:430px;padding:70px 6px 62px;border:0;border-radius:0;background:transparent;box-shadow:none}
+    .hero-meta{padding-bottom:17px;border-bottom:1px solid var(--line);color:#8b8b90}
+    .eyebrow{margin-bottom:17px}
+    h1{font-size:clamp(72px,9vw,112px);line-height:.82}
+    .section{margin-top:82px}
+    .section-heading{margin-bottom:22px;padding-bottom:14px}
+    .section-heading h2{font-size:clamp(30px,3.5vw,46px);letter-spacing:.01em}
+    .more-link{display:inline-flex;min-height:44px;align-items:center;padding:7px 0;border:0;border-radius:0}
+    .more-link:hover{border-color:transparent;transform:translateX(2px)}
+    .video-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:30px 18px}
+    .video-card{transition:transform .22s ease}
+    .video-card:hover{transform:translateY(-2px)}
+    .cover{border:1px solid var(--line);border-radius:14px;box-shadow:none}
+    .cover img{transition:transform .32s cubic-bezier(.2,.7,.2,1),filter .22s}
+    .video-card:hover .cover img{transform:scale(1.015);filter:brightness(.97)}
+    .add-card{border:1px solid var(--line);border-radius:14px;background:var(--card);transition:color .18s,border-color .18s,transform .22s ease}
+    .add-card::after{display:none}
+    .add-card:hover{color:var(--accent);border-color:rgba(164,93,99,.55);background:var(--card);box-shadow:none;transform:translateY(-2px)}
+    .video-card,.add-card{animation-duration:.42s}
+    .dialog{width:min(520px,calc(100% - 32px));max-height:calc(100dvh - 24px);overflow:auto;border:1px solid var(--line);border-radius:var(--ui-radius-lg);background:var(--ui-surface);box-shadow:var(--ui-shadow-dialog)}
+    .dialog::backdrop{background:rgba(25,25,28,.28);backdrop-filter:none}
+    .dialog-form{padding:30px}.dialog-form h3{font:500 30px/1.1 var(--ui-font-display);letter-spacing:-.035em}.dialog-form p{margin:8px 0 24px;color:var(--muted);letter-spacing:.04em}
+    .field{color:var(--muted);letter-spacing:0}.field input{padding:12px 1px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent}.field input:focus{border-color:var(--accent)}
+    .field input[type="file"]{padding:10px 0}
+    .field input[type="file"]::file-selector-button{margin-right:12px;padding:8px 13px;color:#fff;border:0;border-radius:var(--ui-radius-pill);background:var(--ink);font:600 11px/1 inherit;cursor:pointer}
+    .dialog-actions button{min-height:44px;padding:10px 17px;color:var(--ink);border:0;border-radius:var(--ui-radius-pill);background:var(--ui-surface-soft)}
+    .dialog-actions .save{border:0;color:#fff;background:var(--ink)}
+    .random-section{min-height:210px;margin-top:112px;padding:46px 6px}
+    .random-meta strong{font-size:clamp(36px,5vw,60px)}
+    .random-play{gap:34px;transition:gap .2s,border-color .2s}
+    .random-play:hover{gap:36px}
+    .random-play span:last-child{transition:transform .2s}
+    .random-play:hover span:last-child{transform:translateX(2px)}
+    /* Let each film read as image first, then metadata—not an overlay template. */
+    .card-info{position:static;display:block;padding:11px 1px 0;color:var(--ink);background:none;pointer-events:none}
+    .card-title{color:var(--ink);font-size:14px;font-weight:590;text-shadow:none}
+    .video-card:hover .card-title{color:var(--accent)}
+    /* Editorial index: useful collection context without film-themed decoration. */
+    .hero{min-height:330px;padding-top:54px;padding-bottom:48px}
+    .hero-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:clamp(44px,8vw,120px);align-items:end}
+    .hero-intro{max-width:33rem;margin:26px 0 0;color:var(--muted);font-size:14px;line-height:1.8}
+    .collection-index{border-top:1px solid var(--line)}
+    .collection-link,.latest-entry{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;min-height:58px;border-bottom:1px solid var(--line)}
+    .collection-link{color:var(--ink);text-decoration:none;transition:color .18s ease,padding .22s var(--ui-ease-out)}
+    .collection-link:hover,.collection-link:focus-visible{padding-left:8px;color:var(--accent)}
+    .collection-link span,.latest-entry span{font-size:12px;font-weight:600;letter-spacing:.04em}
+    .collection-link strong{font:500 20px/1 var(--ui-font-display);font-variant-numeric:tabular-nums}
+    .latest-entry{grid-template-columns:auto 1fr;align-items:baseline;padding:14px 0}
+    .latest-entry span{color:var(--muted);white-space:nowrap}
+    .latest-entry strong{overflow:hidden;font-size:12px;font-weight:500;text-align:right;text-overflow:ellipsis;white-space:nowrap}
+    .section-heading-copy{display:flex;gap:16px;align-items:baseline}
+    .section-heading-copy p{margin:0;color:var(--muted);font-size:12px}
+    .add-card{align-content:center;gap:7px;padding:22px;color:var(--muted);font-family:var(--ui-font-sans);text-align:center}
+    .add-card span{font:300 28px/1 var(--ui-font-display)}
+    .add-card strong{font-size:13px;font-weight:600}
+    .add-card small{font-size:11px;line-height:1.5}
+    .random-play:disabled{color:var(--muted);border-color:var(--line);cursor:not-allowed}
+    .archive-label,.hero-meta,.more-link,.random-meta{color:var(--muted);font-size:11px}
+    .link-cover{color:var(--muted)}
+    .video-toast{position:fixed;z-index:80;right:24px;bottom:24px;max-width:min(380px,calc(100vw - 48px));padding:13px 17px;border-radius:10px;color:#fff;background:var(--ui-ink);box-shadow:var(--ui-shadow-dialog);font-size:12px;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .25s var(--ui-ease-out)}.video-toast.show{opacity:1;transform:none}.video-toast.error{background:var(--ui-danger)}
+    @media(max-width:1100px){.video-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:760px){.hero{min-height:auto;padding:42px 4px}.hero-body{grid-template-columns:1fr;gap:42px}.hero-intro{margin-top:20px}.section-heading-copy{display:block}.section-heading-copy p{margin-top:7px}.more-link{font-size:12px}}
+    @media(max-width:680px){main{width:min(100% - 32px,1120px);padding-top:30px}.video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}.random-section{margin-top:82px;padding:34px 4px}.add-card{padding:14px 10px}.add-card small{display:none}}
+    @media(max-width:430px){.video-grid{grid-template-columns:1fr}.add-card small{display:block}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <button class="back" id="back" type="button">← 返回</button>
+    <div class="brand"><img src="assets/site-logo-128.png" alt=""><span>nono &amp; txx</span></div>
+    <span class="archive-label">VIDEO ARCHIVE</span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-meta"><span>VIDEO ARCHIVE</span><span id="hero-count">00 FILMS</span></div>
+      <div class="hero-body">
+        <div class="hero-copy"><h1 id="page-title">Video</h1><p class="hero-intro">收藏一起看过、拍过和想留下的视频。按类型浏览，也可以直接随机打开一段回忆。</p></div>
+        <nav class="collection-index" aria-label="视频分类概览">
+          <a class="collection-link" href="#vlog-title"><span>VLOG</span><strong id="vlog-count">00</strong></a>
+          <a class="collection-link" href="#dance-title"><span>dancee</span><strong id="dancee-count">00</strong></a>
+          <div class="latest-entry"><span>最近收录</span><strong id="latest-title">暂无视频</strong></div>
+        </nav>
+      </div>
+    </section>
+
+    <section class="section reveal-section" aria-labelledby="vlog-title">
+      <div class="section-heading"><div class="section-heading-copy"><h2 id="vlog-title">VLOG</h2><p>日常、旅行与一起经历的片段</p></div><a class="more-link" href="vlog.html">查看全部 →</a></div>
+      <div class="video-grid" id="vlog-grid">
+        <button class="add-card" type="button" data-category="vlog" aria-label="添加 VLOG 链接"><span>＋</span><strong>添加 VLOG</strong><small>粘贴链接并选择封面</small></button>
+      </div>
+    </section>
+
+    <section class="section reveal-section" aria-labelledby="dance-title">
+      <div class="section-heading"><div class="section-heading-copy"><h2 id="dance-title">dancee</h2><p>舞蹈练习、作品与喜欢的瞬间</p></div><a class="more-link" href="dancee.html">查看全部 →</a></div>
+      <div class="video-grid" id="dancee-grid">
+        <button class="add-card" type="button" data-category="dancee" aria-label="添加 dancee 链接"><span>＋</span><strong>添加 dancee</strong><small>粘贴链接并选择封面</small></button>
+      </div>
+    </section>
+
+    <section class="random-section reveal-section" aria-label="随机观看">
+      <div class="random-meta"><span id="random-count">00 FILMS</span><strong id="random-title">Random cut.</strong></div>
+      <button class="random-play" id="random-play" type="button"><span>随机看看</span><span aria-hidden="true">↗</span></button>
+    </section>
+  </main>
+
+  <dialog class="dialog" id="link-dialog" aria-labelledby="video-dialog-title">
+    <form class="dialog-form" id="link-form">
+      <h3 id="video-dialog-title">添加链接</h3>
+      <p id="dialog-category"></p>
+      <label class="field">链接<input id="video-url" name="url" type="url" placeholder="https://..." required></label>
+      <label class="field">名称（可不填）<input id="video-name" name="name" type="text" maxlength="50" placeholder="我的新视频"></label>
+      <label class="field">封面（抖音链接请选择）<input id="video-cover" name="cover" type="file" accept="image/*"></label>
+      <p class="dialog-error" id="video-error" role="status" aria-live="polite"></p>
+      <div class="dialog-actions"><button id="cancel-dialog" type="button">取消</button><button class="save" id="video-save" type="submit">保存</button></div>
+    </form>
+  </dialog>
+  <div class="video-toast" id="video-toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/video-library.js?v=20261109f"></script>
+  <script>
+    document.getElementById('back').addEventListener('click',()=>{if(sessionStorage.getItem('nono-index-parent')==='1'&&history.length>1){sessionStorage.removeItem('nono-index-parent');sessionStorage.setItem('nono-index-reset','1');history.back()}else location.replace('index.html')});
+    const dialog=document.getElementById('link-dialog');
+    const form=document.getElementById('link-form');
+    const urlInput=document.getElementById('video-url');
+    const nameInput=document.getElementById('video-name');
+    const coverInput=document.getElementById('video-cover');
+    const saveButton=document.getElementById('video-save');
+    const errorMessage=document.getElementById('video-error');
+    let activeCategory='vlog',toastTimer=0;
+
+    function setVideoError(message=''){errorMessage.textContent=message}
+    function showToast(message,error=false){const toast=document.getElementById('video-toast');clearTimeout(toastTimer);toast.textContent=message;toast.classList.toggle('error',error);toast.classList.add('show');toastTimer=setTimeout(()=>toast.classList.remove('show'),2800)}
+
+    function paintCard(card,item){
+      const cover=card.querySelector('.cover');
+      const old=cover.querySelector('img,.link-cover');
+      if(item.cover){
+        const image=document.createElement('img');
+        image.src=item.cover;
+        image.alt=`${VideoLibrary.title(item)} 封面`;
+        image.loading='lazy';
+        image.decoding='async';
+        image.referrerPolicy='no-referrer';
+        old.replaceWith(image);
+      }else{old.textContent=VideoLibrary.isDouyin(item.url)?'':new URL(item.url).hostname.replace(/^www\./,'');old.classList.toggle('manual-cover',VideoLibrary.isDouyin(item.url))}
+      card.querySelector('.card-title').textContent=VideoLibrary.title(item);
+    }
+
+    function linkCard(item,category){
+      const card=document.createElement('a');
+      card.className='video-card saved-card';
+      card.href=item.url;
+      card.target='_blank';
+      card.rel='noopener noreferrer';
+      card.innerHTML=`<div class="cover"><div class="link-cover"></div><span class="open-mark" aria-hidden="true">↗</span></div><div class="card-info"><h3 class="card-title"></h3></div>`;
+      paintCard(card,item);
+      card.addEventListener('click',async event=>{if(!item.cover&&VideoLibrary.isDouyin(item.url)){event.preventDefault();const cover=await VideoLibrary.pickCover();if(cover){item.cover=cover;VideoLibrary.setCover(category,item.id,cover);paintCard(card,item)}}});
+      VideoLibrary.enrich(category,item).then(updated=>paintCard(card,updated));
+      return card;
+    }
+
+    function renderLinks(){
+      const links=VideoLibrary.read();
+      ['vlog','dancee'].forEach(category=>{
+        const grid=document.getElementById(`${category}-grid`);
+        grid.querySelectorAll('.saved-card').forEach(card=>card.remove());
+        const add=grid.querySelector('.add-card');
+        (links[category]||[]).slice(0,4).forEach((item,index)=>{const card=linkCard(item,category);card.style.setProperty('--order',index);grid.insertBefore(card,add)});
+        add.style.setProperty('--order',Math.min((links[category]||[]).length,4));
+      });
+      const total=(links.vlog?.length||0)+(links.dancee?.length||0);
+      const label=`${String(total).padStart(2,'0')} FILMS`;
+      document.getElementById('hero-count').textContent=label;
+      document.getElementById('random-count').textContent=label;
+      document.getElementById('vlog-count').textContent=String(links.vlog?.length||0).padStart(2,'0');
+      document.getElementById('dancee-count').textContent=String(links.dancee?.length||0).padStart(2,'0');
+      const latest=[...(links.vlog||[]),...(links.dancee||[])].sort((a,b)=>VideoLibrary.dateKey(b.date).localeCompare(VideoLibrary.dateKey(a.date)))[0];
+      document.getElementById('latest-title').textContent=latest?VideoLibrary.title(latest):'暂无视频';
+      document.getElementById('random-title').textContent=total?'Random cut.':'添加第一条视频后可随机观看';
+      document.getElementById('random-play').disabled=total===0;
+      document.getElementById('random-play').setAttribute('aria-label',total?'随机看看':'还没有可随机观看的视频');
+    }
+
+    document.querySelectorAll('.add-card').forEach(button=>button.addEventListener('click',()=>{
+      activeCategory=button.dataset.category;
+      document.getElementById('dialog-category').textContent=activeCategory==='vlog'?'添加到 VLOG':'添加到 dancee';
+      form.reset();
+      urlInput.setCustomValidity('');
+      coverInput.setCustomValidity('');
+      setVideoError();
+      dialog.showModal();
+      urlInput.focus();
+    }));
+
+    document.getElementById('cancel-dialog').addEventListener('click',()=>dialog.close());
+    urlInput.addEventListener('input',()=>{urlInput.setCustomValidity('');setVideoError()});
+    coverInput.addEventListener('change',()=>{coverInput.setCustomValidity('');setVideoError()});
+    dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const url=VideoLibrary.safeUrl(urlInput.value);
+      if(!url){setVideoError('链接格式不正确，请检查后重试。');urlInput.setCustomValidity('请输入以 http:// 或 https:// 开头的视频链接');urlInput.reportValidity();return}
+      if(VideoLibrary.isPlaceholderUrl(url)){setVideoError('这是示例链接，请粘贴真实的视频链接。');urlInput.setCustomValidity('请粘贴真实视频链接');urlInput.reportValidity();return}
+      urlInput.setCustomValidity('');
+      if(VideoLibrary.isDouyin(url)&&!coverInput.files[0]){setVideoError('抖音链接需要选择一张封面图。');coverInput.setCustomValidity('抖音链接需要选择一张封面图');coverInput.reportValidity();return}
+      coverInput.setCustomValidity('');
+      setVideoError();
+      saveButton.disabled=true;
+      saveButton.textContent='保存中…';
+      try{
+        const cover=coverInput.files[0]?await VideoLibrary.coverFromFile(coverInput.files[0]):'';
+        const date=VideoLibrary.normalizeDate(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()));
+        VideoLibrary.add(activeCategory,{url,name:nameInput.value.trim(),date,cover});
+        renderLinks();
+        dialog.close();
+        form.reset();
+        showToast('视频已收藏。');
+      }catch(error){
+        console.error('Video save failed',error);
+        const message=error instanceof Error&&error.message?error.message:'保存失败，请重试。';
+        setVideoError(message);
+        showToast(message,true);
+      }finally{
+        saveButton.disabled=false;
+        saveButton.textContent='保存';
+      }
+    });
+    document.getElementById('random-play').addEventListener('click',()=>{
+      const links=VideoLibrary.read();
+      const items=[...(links.vlog||[]),...(links.dancee||[])];
+      if(!items.length)return;
+      const selected=items[Math.floor(Math.random()*items.length)];
+      const opened=window.open(selected.url,'_blank');
+      if(opened)opened.opener=null;
+    });
+    renderLinks();
+  </script>
+  <script src="assets/music-continuation.js?v=20261109e"></script>
+</body>
+</html>
