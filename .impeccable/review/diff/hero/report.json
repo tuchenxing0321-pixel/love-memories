@@ -1,0 +1,749 @@
+{
+  "tool": "comp-diff",
+  "version": 1,
+  "createdAt": "2026-10-21T07:14:11.382Z",
+  "label": "hero",
+  "comp": ".impeccable/mocks/decision/memory-horizon.webp",
+  "build": ".impeccable/review/hero-repro.png",
+  "spec": ".impeccable/build/spec.json",
+  "compSize": "1586x992",
+  "buildSize": "1586x992",
+  "align": "top",
+  "overall": 0.5685,
+  "verdict": "contradicted",
+  "scores": {
+    "overall": 0.5685,
+    "structure": 0.4349,
+    "color": 0.7958,
+    "colorIntersection": 0.7097,
+    "paletteMatch": 0.8422,
+    "detail": 0.407,
+    "detailRaw": 0.4539,
+    "detailAdded": 0.0938,
+    "bands": 0.7709
+  },
+  "palette": {
+    "comp": [
+      {
+        "hex": "#f8f7f7",
+        "coverage": 0.7065
+      },
+      {
+        "hex": "#362f2c",
+        "coverage": 0.1168
+      },
+      {
+        "hex": "#d1b2a1",
+        "coverage": 0.0659
+      },
+      {
+        "hex": "#655043",
+        "coverage": 0.0437
+      },
+      {
+        "hex": "#a39c9c",
+        "coverage": 0.0343
+      },
+      {
+        "hex": "#ab8873",
+        "coverage": 0.0328
+      }
+    ],
+    "build": [
+      {
+        "hex": "#f6f4f4",
+        "coverage": 0.8579
+      },
+      {
+        "hex": "#503d37",
+        "coverage": 0.0453
+      },
+      {
+        "hex": "#e9c0a6",
+        "coverage": 0.0343
+      },
+      {
+        "hex": "#f8d818",
+        "coverage": 0.0337
+      },
+      {
+        "hex": "#7f5e4c",
+        "coverage": 0.0151
+      },
+      {
+        "hex": "#b8876c",
+        "coverage": 0.0137
+      }
+    ]
+  },
+  "regions": [
+    {
+      "id": "header-rule",
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 0.0685,
+      "kind": "chrome",
+      "score": {
+        "overall": 0.8206,
+        "structure": 0.9761,
+        "color": 0.9821,
+        "colorIntersection": 0.9877,
+        "paletteMatch": 0.979,
+        "detail": 0.3337,
+        "detailRaw": 0.4379,
+        "detailAdded": 0.2083,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 70,
+          "y": 28,
+          "w": 1446,
+          "h": 14
+        },
+        "build": {
+          "x": 68,
+          "y": 26,
+          "w": 1450,
+          "h": 11
+        }
+      },
+      "blocking": null,
+      "blockingReasons": [],
+      "rawVerdict": "match"
+    },
+    {
+      "id": "brand",
+      "x": 0.0404,
+      "y": 0.0222,
+      "w": 0.0599,
+      "h": 0.0222,
+      "kind": "text",
+      "score": {
+        "overall": 0.5211,
+        "structure": 0.4886,
+        "color": 0.8627,
+        "colorIntersection": 0.7841,
+        "paletteMatch": 0.9051,
+        "detail": 0.141,
+        "detailRaw": 0.1774,
+        "detailAdded": 0.0729,
+        "bands": 0.4
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 6,
+          "y": 6,
+          "w": 83,
+          "h": 12
+        },
+        "build": {
+          "x": 4,
+          "y": 4,
+          "w": 36,
+          "h": 11
+        }
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region brand is missing (detail 14%, structure 49%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "relationship-meta",
+      "x": 0.7238,
+      "y": 0.0222,
+      "w": 0.2207,
+      "h": 0.0222,
+      "kind": "text",
+      "score": {
+        "overall": 0.6816,
+        "structure": 0.7921,
+        "color": 0.9283,
+        "colorIntersection": 0.8499,
+        "paletteMatch": 0.9705,
+        "detail": 0.3568,
+        "detailRaw": 0.461,
+        "detailAdded": 0.2083,
+        "bands": 0
+      },
+      "verdict": "drift",
+      "inkBox": {
+        "comp": {
+          "x": 45,
+          "y": 7,
+          "w": 305,
+          "h": 13
+        },
+        "build": {
+          "x": 98,
+          "y": 5,
+          "w": 250,
+          "h": 10
+        }
+      },
+      "blocking": null,
+      "blockingReasons": [],
+      "rawVerdict": "drift"
+    },
+    {
+      "id": "page-title",
+      "x": 0.0366,
+      "y": 0.1038,
+      "w": 0.2301,
+      "h": 0.0877,
+      "kind": "text",
+      "score": {
+        "overall": 0.5266,
+        "structure": 0.3575,
+        "color": 0.867,
+        "colorIntersection": 0.7907,
+        "paletteMatch": 0.9081,
+        "detail": 0.5123,
+        "detailRaw": 0.58,
+        "detailAdded": 0.1354,
+        "bands": 0.5429
+      },
+      "verdict": "drift",
+      "inkBox": {
+        "comp": {
+          "x": 4,
+          "y": 11,
+          "w": 356,
+          "h": 68
+        },
+        "build": {
+          "x": 56,
+          "y": 13,
+          "w": 297,
+          "h": 56
+        }
+      },
+      "blocking": null,
+      "blockingReasons": [],
+      "rawVerdict": "drift"
+    },
+    {
+      "id": "pause-control",
+      "x": 0.7787,
+      "y": 0.122,
+      "w": 0.0744,
+      "h": 0.0524,
+      "kind": "control",
+      "score": {
+        "overall": 0.6355,
+        "structure": 0.7071,
+        "color": 0.8501,
+        "colorIntersection": 0.7484,
+        "paletteMatch": 0.9049,
+        "detail": 0.0987,
+        "detailRaw": 0.156,
+        "detailAdded": 0.1146,
+        "bands": 0
+      },
+      "verdict": "drift",
+      "inkBox": {
+        "comp": {
+          "x": 38,
+          "y": 4,
+          "w": 80,
+          "h": 48
+        },
+        "build": {
+          "x": 66,
+          "y": 0,
+          "w": 52,
+          "h": 33
+        }
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "control pause-control drifts to 64% (structure 71%, color 85%): open .impeccable/review/diff/hero/regions/pause-control.png and compare its lettering and visible shape separately; use the measured readings and preserve the region's control classification"
+      ],
+      "rawVerdict": "drift"
+    },
+    {
+      "id": "manage-control",
+      "x": 0.8619,
+      "y": 0.122,
+      "w": 0.075,
+      "h": 0.0524,
+      "kind": "control",
+      "score": {
+        "overall": 0.6294,
+        "structure": 0.6534,
+        "color": 0.9462,
+        "colorIntersection": 0.9115,
+        "paletteMatch": 0.9649,
+        "detail": 0.0212,
+        "detailRaw": 0.0993,
+        "detailAdded": 0.1563,
+        "bands": 0.25
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 4,
+          "w": 119,
+          "h": 48
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 88,
+          "h": 33
+        }
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region manage-control is missing (detail 2%, structure 65%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "top-photo-rail",
+      "x": 0,
+      "y": 0.2298,
+      "w": 1,
+      "h": 0.256,
+      "kind": "chrome",
+      "score": {
+        "overall": 0.4402,
+        "structure": 0.2743,
+        "color": 0.628,
+        "colorIntersection": 0.5065,
+        "paletteMatch": 0.6934,
+        "detail": 0.4886,
+        "detailRaw": 0.5198,
+        "detailAdded": 0.0625,
+        "bands": 0.4333
+      },
+      "verdict": "contradicted",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 1586,
+          "h": 254
+        },
+        "build": {
+          "x": 94,
+          "y": 12,
+          "w": 1403,
+          "h": 242
+        }
+      },
+      "blocking": null,
+      "blockingReasons": [],
+      "rawVerdict": "contradicted"
+    },
+    {
+      "id": "selected-caption",
+      "x": 0.3632,
+      "y": 0.4304,
+      "w": 0.1614,
+      "h": 0.0554,
+      "kind": "text",
+      "score": {
+        "overall": 0.4638,
+        "structure": 0.5712,
+        "color": 0.5528,
+        "colorIntersection": 0.1987,
+        "paletteMatch": 0.7434,
+        "detail": 0,
+        "detailRaw": 0.0257,
+        "detailAdded": 0.1875,
+        "bands": 0.4
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 9,
+          "y": 0,
+          "w": 169,
+          "h": 55
+        },
+        "build": {
+          "x": 202,
+          "y": 11,
+          "w": 54,
+          "h": 44
+        }
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region selected-caption is missing (detail 0%, structure 57%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "bottom-photo-rail",
+      "x": 0,
+      "y": 0.5071,
+      "w": 1,
+      "h": 0.1754,
+      "kind": "chrome",
+      "score": {
+        "overall": 0.3375,
+        "structure": 0.2603,
+        "color": 0.5427,
+        "colorIntersection": 0.2469,
+        "paletteMatch": 0.7021,
+        "detail": 0.2728,
+        "detailRaw": 0.2989,
+        "detailAdded": 0.0521,
+        "bands": 0.2833
+      },
+      "verdict": "contradicted",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 1586,
+          "h": 174
+        },
+        "build": {
+          "x": 87,
+          "y": 0,
+          "w": 1345,
+          "h": 154
+        }
+      },
+      "blocking": null,
+      "blockingReasons": [],
+      "rawVerdict": "contradicted"
+    },
+    {
+      "id": "timeline-heading",
+      "x": 0.0391,
+      "y": 0.748,
+      "w": 0.082,
+      "h": 0.0454,
+      "kind": "text",
+      "score": {
+        "overall": 0.6304,
+        "structure": 0.772,
+        "color": 0.8176,
+        "colorIntersection": 0.802,
+        "paletteMatch": 0.826,
+        "detail": 0,
+        "detailRaw": 0,
+        "detailAdded": 0,
+        "bands": 0.4
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 5,
+          "y": 25,
+          "w": 125,
+          "h": 20
+        },
+        "build": null
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region timeline-heading is missing (detail 0%, structure 77%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "timeline-subhead",
+      "x": 0.198,
+      "y": 0.7611,
+      "w": 0.082,
+      "h": 0.0242,
+      "kind": "text",
+      "score": {
+        "overall": 0.8498,
+        "structure": 0.7771,
+        "color": 0.945,
+        "colorIntersection": 0.8487,
+        "paletteMatch": 0.9969,
+        "detail": 0.8333,
+        "detailRaw": 1,
+        "detailAdded": 0.3333,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": null,
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 43,
+          "h": 24
+        }
+      },
+      "blocking": null,
+      "blockingReasons": [],
+      "rawVerdict": "match"
+    },
+    {
+      "id": "timeline-rule",
+      "x": 0.1412,
+      "y": 0.7702,
+      "w": 0.8071,
+      "h": 0.003,
+      "kind": "chrome",
+      "score": {
+        "overall": 0.7133,
+        "structure": 0.9461,
+        "color": 0.9288,
+        "colorIntersection": 0.9289,
+        "paletteMatch": 0.9287,
+        "detail": 0,
+        "detailRaw": 0,
+        "detailAdded": 0.125,
+        "bands": 1
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 1187,
+          "y": 0,
+          "w": 93,
+          "h": 3
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 131,
+          "h": 3
+        }
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region timeline-rule is missing (detail 0%, structure 95%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "backup-control",
+      "x": 0.8575,
+      "y": 0.7419,
+      "w": 0.0731,
+      "h": 0.0444,
+      "kind": "control",
+      "score": {
+        "overall": 0.6441,
+        "structure": 0.8595,
+        "color": 0.7351,
+        "colorIntersection": 0.7265,
+        "paletteMatch": 0.7398,
+        "detail": 0,
+        "detailRaw": 0,
+        "detailAdded": 0,
+        "bands": 0.4
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 46,
+          "y": 23,
+          "w": 70,
+          "h": 21
+        },
+        "build": null
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region backup-control is missing (detail 0%, structure 86%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "event-date",
+      "x": 0.4596,
+      "y": 0.8226,
+      "w": 0.0731,
+      "h": 0.0242,
+      "kind": "text",
+      "score": {
+        "overall": 0.8308,
+        "structure": 0.9849,
+        "color": 0.9532,
+        "colorIntersection": 0.9167,
+        "paletteMatch": 0.9729,
+        "detail": 0,
+        "detailRaw": 0,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": null,
+        "build": null
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region event-date is missing (detail 0%, structure 98%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "event-title",
+      "x": 0.4596,
+      "y": 0.8508,
+      "w": 0.1375,
+      "h": 0.0313,
+      "kind": "text",
+      "score": {
+        "overall": 0.7083,
+        "structure": 0.8728,
+        "color": 0.9274,
+        "colorIntersection": 0.9106,
+        "paletteMatch": 0.9365,
+        "detail": 0,
+        "detailRaw": 0,
+        "detailAdded": 0,
+        "bands": 0.4
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 26,
+          "y": 3,
+          "w": 189,
+          "h": 28
+        },
+        "build": null
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region event-title is missing (detail 0%, structure 87%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "event-story",
+      "x": 0.4596,
+      "y": 0.8861,
+      "w": 0.1368,
+      "h": 0.0534,
+      "kind": "text",
+      "score": {
+        "overall": 0.5765,
+        "structure": 0.6635,
+        "color": 0.819,
+        "colorIntersection": 0.7737,
+        "paletteMatch": 0.8434,
+        "detail": 0,
+        "detailRaw": 0,
+        "detailAdded": 0,
+        "bands": 0.4
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 27,
+          "y": 0,
+          "w": 187,
+          "h": 44
+        },
+        "build": null
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region event-story is missing (detail 0%, structure 66%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    },
+    {
+      "id": "event-thumb-strip",
+      "x": 0.6248,
+      "y": 0.8306,
+      "w": 0.302,
+      "h": 0.125,
+      "kind": "chrome",
+      "score": {
+        "overall": 0.368,
+        "structure": 0.3407,
+        "color": 0.4044,
+        "colorIntersection": 0.2909,
+        "paletteMatch": 0.4655,
+        "detail": 0.0505,
+        "detailRaw": 0.139,
+        "detailAdded": 0.1771,
+        "bands": 0.9
+      },
+      "verdict": "missing",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 479,
+          "h": 124
+        },
+        "build": {
+          "x": 113,
+          "y": 17,
+          "w": 259,
+          "h": 72
+        }
+      },
+      "blocking": true,
+      "blockingReasons": [
+        "region event-thumb-strip is missing (detail 5%, structure 34%): the comp shows material the build does not"
+      ],
+      "rawVerdict": "missing"
+    }
+  ],
+  "files": {
+    "sideBySide": "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/side-by-side.png",
+    "heatmap": "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/heatmap.png",
+    "regionFiles": [
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/header-rule.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/brand.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/relationship-meta.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/page-title.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/pause-control.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/manage-control.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/top-photo-rail.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/selected-caption.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/bottom-photo-rail.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/timeline-heading.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/timeline-subhead.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/timeline-rule.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/backup-control.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/event-date.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/event-title.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/event-story.png",
+      "/Users/tt/Documents/ChatGPT/恋爱/.impeccable/review/diff/hero/regions/event-thumb-strip.png"
+    ]
+  },
+  "interpretation": "hero-gate",
+  "measurementsAvailable": true,
+  "gate": {
+    "ok": false,
+    "reasons": [
+      "hero overall 56.9% < 72% (structure 43%, color 80%, detail 41%)",
+      "region brand is missing (detail 14%, structure 49%): the comp shows material the build does not",
+      "region manage-control is missing (detail 2%, structure 65%): the comp shows material the build does not",
+      "region selected-caption is missing (detail 0%, structure 57%): the comp shows material the build does not",
+      "region timeline-heading is missing (detail 0%, structure 77%): the comp shows material the build does not",
+      "region timeline-rule is missing (detail 0%, structure 95%): the comp shows material the build does not",
+      "region backup-control is missing (detail 0%, structure 86%): the comp shows material the build does not",
+      "region event-date is missing (detail 0%, structure 98%): the comp shows material the build does not",
+      "region event-title is missing (detail 0%, structure 87%): the comp shows material the build does not",
+      "region event-story is missing (detail 0%, structure 66%): the comp shows material the build does not",
+      "region event-thumb-strip is missing (detail 5%, structure 34%): the comp shows material the build does not",
+      "control pause-control drifts to 64% (structure 71%, color 85%): open .impeccable/review/diff/hero/regions/pause-control.png and compare its lettering and visible shape separately; use the measured readings and preserve the region's control classification",
+      "the build carries ink in 5 grid cells where the comp is calm (C7, B8, C8, C9, D9); nothing exists on the page that the comp does not show (a kicker, an extra nav item, a divider, a second row of controls); remove it or name it in a stated decision after the hero passes"
+    ],
+    "advisories": [
+      "(advisory, unchanged for 3+ attempts) text relationship-meta: it starts 53px further right than in the comp",
+      "(advisory, unchanged for 3+ attempts) chrome event-thumb-strip: its rule sits 24px into the box in the comp and 113px in the build (+89px), so the strip is taller than the comp's; match the height, not only the position"
+    ],
+    "unscopedReasons": [
+      "hero overall 56.9% < 72% (structure 43%, color 80%, detail 41%)",
+      "the build carries ink in 5 grid cells where the comp is calm (C7, B8, C8, C9, D9); nothing exists on the page that the comp does not show (a kicker, an extra nav item, a divider, a second row of controls); remove it or name it in a stated decision after the hero passes"
+    ]
+  },
+  "rawReport": ".impeccable/review/diff/hero/raw-report.json"
+}

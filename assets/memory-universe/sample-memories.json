@@ -1,0 +1,20 @@
+[
+  {
+    "id": "photo-001",
+    "src": "/photos/examples/photo-001.webp",
+    "thumbnail": "/photos/examples/thumbs/photo-001.webp",
+    "title": "海边的下午",
+    "date": "2026-08-12",
+    "location": "厦门",
+    "description": "属于这张照片的回忆文字"
+  },
+  {
+    "id": "photo-002",
+    "src": "/photos/examples/photo-002.webp",
+    "thumbnail": "/photos/examples/thumbs/photo-002.webp",
+    "title": "一起走过的路",
+    "date": "2026-09-17",
+    "location": "",
+    "description": "没有日期或地点时也可以留空"
+  }
+]

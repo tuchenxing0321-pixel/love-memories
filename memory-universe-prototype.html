@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#07101d" />
+    <meta http-equiv="refresh" content="0;url=creative.html" />
+    <script>location.replace("creative.html");</script>
+    <title>回忆宇宙 · 原型</title>
+    <link rel="stylesheet" href="assets/memory-universe/memory-universe.css" />
+  </head>
+  <body>
+    <main id="memory-universe" class="memory-universe" aria-label="沉浸式回忆宇宙">
+      <canvas class="memory-universe__canvas" aria-hidden="true"></canvas>
+
+      <header class="memory-universe__header">
+        <div>
+          <p class="memory-universe__eyebrow">nono &amp; txx</p>
+          <h1>回忆宇宙</h1>
+        </div>
+        <div class="memory-universe__actions">
+          <button class="memory-universe__search-toggle" type="button" aria-expanded="false" aria-controls="memory-search">搜索</button>
+          <button class="memory-universe__reset" type="button">回到全景</button>
+        </div>
+      </header>
+
+      <form id="memory-search" class="memory-universe__search" role="search" hidden>
+        <label for="memory-search-input">寻找一段回忆</label>
+        <div>
+          <input id="memory-search-input" type="search" autocomplete="off" placeholder="标题、地点或日期" />
+          <button type="submit">前往</button>
+        </div>
+        <p class="memory-universe__search-status" aria-live="polite"></p>
+      </form>
+
+      <div class="memory-universe__loading" role="status">
+        <span></span>
+        <p>正在散开回忆</p>
+      </div>
+
+      <p class="memory-universe__hint">拖动探索 · 滚轮进入回忆</p>
+
+      <aside class="memory-detail" aria-hidden="true">
+        <button class="memory-detail__close" type="button" aria-label="关闭回忆">返回宇宙</button>
+        <button class="memory-detail__previous" type="button" aria-label="上一张照片">上一张</button>
+        <figure>
+          <img class="memory-detail__image" alt="" />
+          <figcaption>
+            <p class="memory-detail__date"></p>
+            <h2 class="memory-detail__title"></h2>
+            <p class="memory-detail__location"></p>
+            <p class="memory-detail__description"></p>
+          </figcaption>
+        </figure>
+        <button class="memory-detail__next" type="button" aria-label="下一张照片">下一张</button>
+      </aside>
+
+      <section class="memory-universe__fallback" hidden>
+        <h2>这些回忆仍然在这里</h2>
+        <p>当前浏览器无法打开三维空间，已切换为照片列表。</p>
+        <div class="memory-universe__fallback-grid"></div>
+      </section>
+    </main>
+    <script type="module" src="assets/memory-universe/memory-universe.js"></script>
+  </body>
+</html>

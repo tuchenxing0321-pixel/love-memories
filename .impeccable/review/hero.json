@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "stage": "hero",
+  "id": "hero",
+  "title": "First viewport",
+  "comp": {
+    "path": ".impeccable/mocks/decision/memory-horizon.webp",
+    "width": 1586,
+    "height": 992
+  },
+  "components": [
+    {
+      "id": "first-viewport",
+      "name": "First viewport",
+      "medium": "HTML / CSS",
+      "note": "Assembled first viewport",
+      "box": {"x": 0, "y": 0, "w": 1, "h": 1},
+      "preview": {"kind": "page", "path": ".impeccable/review/memories-fixture.html"},
+      "dependencies": [
+        "assets/site-logo-128.png",
+        "assets/site-logo.png",
+        "assets/girl-first-frame.jpg",
+        "assets/boy-first-frame.jpg",
+        "assets/page-transitions.css",
+        "assets/memories-v2.css",
+        "assets/memory-library.js",
+        ".impeccable/review/memories-fixture.js"
+      ]
+    }
+  ]
+}

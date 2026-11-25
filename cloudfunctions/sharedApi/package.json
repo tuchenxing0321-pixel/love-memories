@@ -1,0 +1,8 @@
+{
+  "name": "shared-api",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "@cloudbase/node-sdk": "4.2.1"
+  }
+}

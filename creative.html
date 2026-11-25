@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#07101d" />
+    <link rel="icon" type="image/png" href="assets/site-logo-128.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/site-logo-180.png" />
+    <title>创意 · nono &amp; txx</title>
+    <link rel="stylesheet" href="assets/memory-universe/memory-universe.css?v=20261125a" />
+  </head>
+  <body>
+    <main id="memory-universe" class="memory-universe" aria-label="沉浸式回忆宇宙">
+      <canvas class="memory-universe__canvas" aria-hidden="true"></canvas>
+
+      <header class="memory-universe__header">
+        <div>
+          <a class="memory-universe__back" href="index.html">返回主页</a>
+          <p class="memory-universe__eyebrow">nono &amp; txx · 回忆宇宙</p>
+          <h1>创意</h1>
+        </div>
+        <div class="memory-universe__actions">
+          <button class="memory-universe__reset" type="button">回到全景</button>
+        </div>
+      </header>
+
+      <div class="memory-universe__loading" role="status">
+        <span></span>
+        <p>正在散开回忆</p>
+      </div>
+
+      <p class="memory-universe__hint"><span class="memory-universe__hint-desktop">拖动探索 · 滚轮放大 · 点击照片</span><span class="memory-universe__hint-touch">拖动探索 · 双指放大 · 轻点照片</span></p>
+
+      <section class="memory-universe__empty memory-universe__state" hidden>
+        <h2>宇宙还在等待第一张照片</h2>
+        <p>照片会与“回忆”页面保持同步，不会读取任何视频封面。</p>
+        <a href="memories.html">前往回忆</a>
+      </section>
+
+      <section class="memory-universe__error memory-universe__state" role="alert" hidden>
+        <h2>暂时没有读到照片</h2>
+        <p>CloudBase 连接暂时不可用，已有照片没有被修改。</p>
+        <button type="button" onclick="location.reload()">重新读取</button>
+      </section>
+
+      <aside class="memory-detail" aria-hidden="true">
+        <button class="memory-detail__close" type="button" aria-label="关闭回忆">返回宇宙</button>
+        <button class="memory-detail__previous" type="button" aria-label="上一张照片">上一张</button>
+        <figure>
+          <img class="memory-detail__image" alt="" />
+          <figcaption>
+            <p class="memory-detail__date"></p>
+            <h2 class="memory-detail__title"></h2>
+            <p class="memory-detail__location"></p>
+            <p class="memory-detail__description"></p>
+          </figcaption>
+        </figure>
+        <button class="memory-detail__next" type="button" aria-label="下一张照片">下一张</button>
+      </aside>
+
+      <section class="memory-universe__fallback" hidden>
+        <h2>这些回忆仍然在这里</h2>
+        <p>当前浏览器无法打开三维空间，已切换为照片列表。</p>
+        <div class="memory-universe__fallback-grid"></div>
+      </section>
+    </main>
+
+    <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+    <script src="assets/cloudbase-dates-config.js?v=20261026b"></script>
+    <script src="assets/cloudbase-config.js?v=20261026c"></script>
+    <script src="assets/cloudbase-client.js?v=20261028e"></script>
+    <script src="assets/cloud-memory-library.js?v=20261026c"></script>
+    <script src="assets/memory-universe/cloud-photo-source.js?v=20261125c"></script>
+    <script type="module" src="assets/memory-universe/memory-universe.js?v=20261125g"></script>
+    <script src="assets/music-continuation.js?v=20261109e"></script>
+  </body>
+</html>

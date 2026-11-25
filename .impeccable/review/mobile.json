@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "stage": "responsive",
+  "id": "mobile",
+  "title": "Mobile viewport",
+  "comp": {
+    "path": ".impeccable/review/mobile-reference.png",
+    "width": 390,
+    "height": 1400
+  },
+  "components": [
+    {
+      "id": "mobile-page",
+      "name": "Mobile page",
+      "medium": "HTML / CSS",
+      "note": "Full mobile acceptance viewport",
+      "box": {"x": 0, "y": 0, "w": 1, "h": 1},
+      "preview": {"kind": "page", "path": ".impeccable/review/memories-fixture.html"},
+      "dependencies": [
+        "assets/site-logo-128.png",
+        "assets/site-logo.png",
+        "assets/girl-first-frame.jpg",
+        "assets/boy-first-frame.jpg",
+        "assets/page-transitions.css",
+        "assets/memories-v2.css",
+        "assets/memory-library.js",
+        ".impeccable/review/memories-fixture.js"
+      ]
+    }
+  ]
+}

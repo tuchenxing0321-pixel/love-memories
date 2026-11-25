@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 3,
+  "stage": "components",
+  "id": "components",
+  "title": "Plan and asset review · memories.html",
+  "comp": {
+    "path": ".impeccable/mocks/decision/memory-horizon.webp",
+    "width": 1586,
+    "height": 992
+  },
+  "specSha256": "17b2ffd6d991a9b4d7d4cd63a585bc43acbee572a24017e17d77fd7d567c1eeb",
+  "components": [
+    {
+      "id": "manage-control",
+      "name": "Manage control",
+      "kind": "control",
+      "role": "plan",
+      "box": {
+        "x": 0.8619,
+        "y": 0.122,
+        "w": 0.075,
+        "h": 0.0524
+      },
+      "note": "quiet manage photos button drawn by HTML and CSS",
+      "medium": "code",
+      "preview": {
+        "kind": "comp-crop"
+      },
+      "codeDrawn": true,
+      "dependencies": []
+    },
+    {
+      "id": "top-photo-rail",
+      "name": "Top photo rail",
+      "kind": "chrome",
+      "role": "plan",
+      "box": {
+        "x": 0,
+        "y": 0.2298,
+        "w": 1,
+        "h": 0.256
+      },
+      "note": "runtime photo rail populated from the user IndexedDB library, including selected-photo treatment and viewport clipping",
+      "medium": "code",
+      "preview": {
+        "kind": "comp-crop"
+      },
+      "flags": [
+        {
+          "id": "painted-pixels",
+          "message": "Looks painted: 42 colours beyond its two main tones and soft shading across 55% of it. Drawn in code, this becomes a flat copy."
+        }
+      ],
+      "codeDrawn": true,
+      "dependencies": []
+    },
+    {
+      "id": "bottom-photo-rail",
+      "name": "Bottom photo rail",
+      "kind": "chrome",
+      "role": "plan",
+      "box": {
+        "x": 0,
+        "y": 0.5071,
+        "w": 1,
+        "h": 0.1754
+      },
+      "note": "second runtime photo rail populated from the same user library with an offset rhythm",
+      "medium": "code",
+      "preview": {
+        "kind": "comp-crop"
+      },
+      "flags": [
+        {
+          "id": "painted-pixels",
+          "message": "Looks painted: 72 colours beyond its two main tones and soft shading across 56% of it. Drawn in code, this becomes a flat copy."
+        }
+      ],
+      "codeDrawn": true,
+      "dependencies": []
+    },
+    {
+      "id": "event-thumb-strip",
+      "name": "Event thumb strip",
+      "kind": "chrome",
+      "role": "plan",
+      "box": {
+        "x": 0.6248,
+        "y": 0.8306,
+        "w": 0.302,
+        "h": 0.125
+      },
+      "note": "runtime thumbnails from the selected user memory event",
+      "medium": "code",
+      "preview": {
+        "kind": "comp-crop"
+      },
+      "flags": [
+        {
+          "id": "painted-pixels",
+          "message": "Looks painted: 40 colours beyond its two main tones and soft shading across 52% of it. Drawn in code, this becomes a flat copy."
+        }
+      ],
+      "codeDrawn": true,
+      "dependencies": []
+    }
+  ],
+  "codeRegions": [
+    {
+      "id": "header-rule",
+      "name": "Header rule",
+      "kind": "chrome",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 0.0685
+      },
+      "note": "compact archive header with one thin bottom rule"
+    },
+    {
+      "id": "brand",
+      "name": "Brand",
+      "kind": "text",
+      "box": {
+        "x": 0.0404,
+        "y": 0.0222,
+        "w": 0.0599,
+        "h": 0.0222
+      },
+      "note": "nono & txx wordmark"
+    },
+    {
+      "id": "relationship-meta",
+      "name": "Relationship meta",
+      "kind": "text",
+      "box": {
+        "x": 0.7238,
+        "y": 0.0222,
+        "w": 0.2207,
+        "h": 0.0222
+      },
+      "note": "since date and one quiet relationship line"
+    },
+    {
+      "id": "page-title",
+      "name": "Page title",
+      "kind": "text",
+      "box": {
+        "x": 0.0366,
+        "y": 0.1038,
+        "w": 0.2301,
+        "h": 0.0877
+      },
+      "note": "Memories display title"
+    },
+    {
+      "id": "pause-control",
+      "name": "Pause control",
+      "kind": "control",
+      "box": {
+        "x": 0.7787,
+        "y": 0.122,
+        "w": 0.0744,
+        "h": 0.0524
+      },
+      "note": "outlined pause control with icon and Chinese label"
+    },
+    {
+      "id": "selected-caption",
+      "name": "Selected caption",
+      "kind": "text",
+      "box": {
+        "x": 0.3632,
+        "y": 0.4304,
+        "w": 0.1614,
+        "h": 0.0554
+      },
+      "note": "selected date and one event line in muted wine ink"
+    },
+    {
+      "id": "timeline-heading",
+      "name": "Timeline heading",
+      "kind": "text",
+      "box": {
+        "x": 0.0391,
+        "y": 0.748,
+        "w": 0.082,
+        "h": 0.0454
+      },
+      "note": "Chinese timeline heading"
+    },
+    {
+      "id": "timeline-subhead",
+      "name": "Timeline subhead",
+      "kind": "text",
+      "box": {
+        "x": 0.198,
+        "y": 0.7611,
+        "w": 0.082,
+        "h": 0.0242
+      },
+      "note": "short timeline introduction"
+    },
+    {
+      "id": "timeline-rule",
+      "name": "Timeline rule",
+      "kind": "chrome",
+      "box": {
+        "x": 0.1412,
+        "y": 0.7702,
+        "w": 0.8071,
+        "h": 0.003
+      },
+      "note": "hairline horizontal timeline rule"
+    },
+    {
+      "id": "backup-control",
+      "name": "Backup control",
+      "kind": "control",
+      "box": {
+        "x": 0.8575,
+        "y": 0.7419,
+        "w": 0.0731,
+        "h": 0.0444
+      },
+      "note": "muted wine immediate backup control"
+    },
+    {
+      "id": "event-date",
+      "name": "Event date",
+      "kind": "text",
+      "box": {
+        "x": 0.4596,
+        "y": 0.8226,
+        "w": 0.0731,
+        "h": 0.0242
+      },
+      "note": "selected event date in muted wine ink"
+    },
+    {
+      "id": "event-title",
+      "name": "Event title",
+      "kind": "text",
+      "box": {
+        "x": 0.4596,
+        "y": 0.8508,
+        "w": 0.1375,
+        "h": 0.0313
+      },
+      "note": "selected event title"
+    },
+    {
+      "id": "event-story",
+      "name": "Event story",
+      "kind": "text",
+      "box": {
+        "x": 0.4596,
+        "y": 0.8861,
+        "w": 0.1368,
+        "h": 0.0534
+      },
+      "note": "two-line selected event excerpt"
+    }
+  ]
+}

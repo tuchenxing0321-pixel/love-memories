@@ -1,0 +1,11 @@
+{
+  "name": "date-api",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test core.test.js"
+  },
+  "dependencies": {
+    "@cloudbase/node-sdk": "^3.18.0"
+  }
+}

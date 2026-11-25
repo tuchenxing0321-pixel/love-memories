@@ -1,0 +1,32 @@
+{
+  "envId": "memories-d4g4tuz0rd39f03f2",
+  "functionRoot": "cloudfunctions",
+  "functions": [
+    {
+      "name": "memoryApi",
+      "handler": "index.main",
+      "timeout": 20,
+      "runtime": "Nodejs20.19",
+      "installDependency": true
+    },
+    {
+      "name": "mediaSigning",
+      "timeout": 20,
+      "runtime": "Nodejs20.19"
+    },
+    {
+      "name": "dateApi",
+      "handler": "index.main",
+      "timeout": 10,
+      "runtime": "Nodejs20.19",
+      "installDependency": true
+    },
+    {
+      "name": "lensApi",
+      "handler": "index.main",
+      "timeout": 20,
+      "runtime": "Nodejs20.19",
+      "installDependency": true
+    }
+  ]
+}

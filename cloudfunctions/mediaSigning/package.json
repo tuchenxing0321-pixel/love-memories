@@ -1,0 +1,9 @@
+{
+  "name": "media-signing",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "@cloudbase/node-sdk": "^3.10.0",
+    "cos-nodejs-sdk-v5": "^2.14.7"
+  }
+}

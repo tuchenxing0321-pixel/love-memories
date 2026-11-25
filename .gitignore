@@ -6,3 +6,16 @@ dist/
 .cloudbase/
 旧版本功能备份/
 assets/music-button-animation.mp4
+# Never commit plaintext private notes or exported personal-data backups.
+assets/secret-note.jpg
+assets/secret-note.jpeg
+assets/secret-note.png
+assets/secret-note.webp
+nono-txx-backup-*.json
+*.private-backup.json
+公开版本/
+GitHub公开版/
+assets/memory-universe/demo-photos/
+.env
+.env.*
+!.env.example
