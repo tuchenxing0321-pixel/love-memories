@@ -187,7 +187,10 @@ exports.main = async event => {
       const nickname = normalizeNickname(payload.nickname);
       const loginActor = crypto.createHash('sha256').update(`login:${nickname.toLocaleLowerCase('zh-CN')}`).digest('hex');
       await takeSlot(`login:${loginActor}`, 10, 10 * 60);
-      if (!constantTimeEqual(payload.key, ACCESS_KEY)) return fail('共享密钥不正确', 401);
+      if (!constantTimeEqual(payload.key, ACCESS_KEY)) {
+        await takeSlot('login:failed:global', 20, 10 * 60);
+        return fail('共享密钥不正确', 401);
+      }
       const session = signSession(nickname, SESSION_SECRET, ACCESS_KEY);
       return ok({ token: session.token, nickname: session.identity.nickname, expiresAt: session.identity.exp * 1000, role: 'visitor' });
     }
