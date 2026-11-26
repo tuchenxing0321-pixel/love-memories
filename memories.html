@@ -401,14 +401,24 @@
     $('photoForm').onsubmit = async event => {
       event.preventDefault(); if (!requireAccess()) return; const button = $('photoSave');
       if (button.disabled) return; button.disabled = true; button.textContent = '添加中…';
+      let addedCount = 0;
       try {
         const images = await MemoryLibrary.imagesFromFiles($('photoFile').files);
         const photoDate = $('photoDate').value || MemoryLibrary.today();
         const photoTitle = $('photoTitle').value.trim() || '一张照片';
-        for (const image of images) await MemoryLibrary.put({id:crypto.randomUUID(),kind:'photo',title:photoTitle,date:photoDate,story:'',place:'',images:[image]});
+        for (const image of images) {
+          button.textContent = `正在添加 ${addedCount + 1}/${images.length}…`;
+          await MemoryLibrary.put({id:crypto.randomUUID(),kind:'photo',title:photoTitle,date:photoDate,story:'',place:'',images:[image]});
+          addedCount += 1;
+        }
         pendingPhotoId = images.at(-1)?.id || '';
         $('photoManager').close(); $('photoForm').reset(); await render(); toast(`${images.length} 张图片已添加`);
-      } catch (error) { toast(readableError(error), true); }
+      } catch (error) {
+        if (addedCount) {
+          $('photoManager').close(); $('photoForm').reset(); await render();
+          toast(`已添加 ${addedCount} 张；后续照片未完成：${readableError(error)}。请只重新选择未上传的照片。`, true);
+        } else toast(readableError(error), true);
+      }
       finally { button.disabled = false; button.textContent = '添加所选图片'; }
     };
 

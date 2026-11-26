@@ -79,7 +79,10 @@ try {
           overflow,
           visibleMain: Boolean(primarySurface && visible(primarySurface)),
           infiniteAnimations,
-          visibleVideoDates: [...document.querySelectorAll('.card-date,.date')].filter(visible).map(element => element.textContent.trim())
+          visibleVideoDates: [...document.querySelectorAll('.card-date,.date')].filter(visible).map(element => element.textContent.trim()),
+          videoLoadError: document.querySelector('#video-sync-status')?.dataset.error === 'true',
+          videoRetry: Boolean(document.querySelector('#video-sync-status button')),
+          videoCount: document.querySelector('#hero-count')?.textContent.trim()
         };
       });
 
@@ -91,6 +94,9 @@ try {
       }
       if (['video.html', 'vlog.html', 'dancee.html'].includes(filename) && state.visibleVideoDates.length) {
         throw new Error(`${filename} ${variant.name} shows dates under video cards: ${JSON.stringify(state.visibleVideoDates)}`);
+      }
+      if (filename === 'video.html' && state.videoLoadError && (!state.videoRetry || state.videoCount !== '— FILMS')) {
+        throw new Error('video.html makes a cloud read failure look like an empty collection');
       }
       await page.close();
     }

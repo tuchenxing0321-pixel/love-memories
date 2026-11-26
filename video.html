@@ -147,7 +147,7 @@
     @media(max-width:680px){main{width:min(100% - 32px,1120px);padding-top:30px}.video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}.random-section{margin-top:82px;padding:34px 4px}.add-card{padding:14px 10px}.add-card small{display:none}}
     @media(max-width:430px){.video-grid{grid-template-columns:1fr}.add-card small{display:block}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-    [hidden]{display:none!important}.video-sync-status{margin:18px 0;color:#675f59;font-size:13px}.video-sync-status[data-error="true"]{color:#7e2f40}
+    [hidden]{display:none!important}.video-sync-status{margin:18px 0;color:#675f59;font-size:13px}.video-sync-status[data-error="true"]{color:#7e2f40}.video-sync-status button{margin-left:12px;padding:6px 10px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;cursor:pointer}.video-sync-status button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
   </style>
 </head>
 <body>
@@ -160,13 +160,13 @@
   <main>
     <p class="video-sync-status" id="video-sync-status" role="status" aria-live="polite">正在读取共享视频…</p>
     <section class="hero" aria-labelledby="page-title">
-      <div class="hero-meta"><span>VIDEO ARCHIVE</span><span id="hero-count">00 FILMS</span></div>
+      <div class="hero-meta"><span>VIDEO ARCHIVE</span><span id="hero-count">— FILMS</span></div>
       <div class="hero-body">
         <div class="hero-copy"><h1 id="page-title">Video</h1><p class="hero-intro">收藏一起看过、拍过和想留下的视频。按类型浏览，也可以直接随机打开一段回忆。</p></div>
         <nav class="collection-index" aria-label="视频分类概览">
-          <a class="collection-link" href="#vlog-title"><span>VLOG</span><strong id="vlog-count">00</strong></a>
-          <a class="collection-link" href="#dance-title"><span>dancee</span><strong id="dancee-count">00</strong></a>
-          <div class="latest-entry"><span>最近收录</span><strong id="latest-title">暂无视频</strong></div>
+          <a class="collection-link" href="#vlog-title"><span>VLOG</span><strong id="vlog-count">—</strong></a>
+          <a class="collection-link" href="#dance-title"><span>dancee</span><strong id="dancee-count">—</strong></a>
+          <div class="latest-entry"><span>最近收录</span><strong id="latest-title">正在读取</strong></div>
         </nav>
       </div>
     </section>
@@ -186,8 +186,8 @@
     </section>
 
     <section class="random-section reveal-section" aria-label="随机观看">
-      <div class="random-meta"><span id="random-count">00 FILMS</span><strong id="random-title">Random cut.</strong></div>
-      <button class="random-play" id="random-play" type="button"><span>随机看看</span><span aria-hidden="true">↗</span></button>
+      <div class="random-meta"><span id="random-count">— FILMS</span><strong id="random-title">正在读取</strong></div>
+      <button class="random-play" id="random-play" type="button" disabled><span>随机看看</span><span aria-hidden="true">↗</span></button>
     </section>
   </main>
 
@@ -330,7 +330,7 @@
       const status=document.getElementById('video-sync-status');
       status.textContent='正在读取共享视频…';status.dataset.error='false';
       try{await VideoLibrary.load();renderLinks();status.hidden=true}
-      catch(error){document.querySelectorAll('.add-card').forEach(button=>button.hidden=true);status.hidden=false;status.dataset.error='true';status.textContent=`共享视频暂时无法读取：${error.message||'请稍后刷新页面'}`}
+      catch(error){document.querySelectorAll('.add-card').forEach(button=>button.hidden=true);status.hidden=false;status.dataset.error='true';status.textContent=`共享视频暂时无法读取：${error.message||'请稍后重试'}`;const retry=document.createElement('button');retry.type='button';retry.textContent='重新读取';retry.onclick=loadVideos;status.append(retry)}
     }
     loadVideos();
     addEventListener('pageshow',event=>{if(event.persisted)loadVideos()});
