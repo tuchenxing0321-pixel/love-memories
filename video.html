@@ -147,6 +147,7 @@
     @media(max-width:680px){main{width:min(100% - 32px,1120px);padding-top:30px}.video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}.random-section{margin-top:82px;padding:34px 4px}.add-card{padding:14px 10px}.add-card small{display:none}}
     @media(max-width:430px){.video-grid{grid-template-columns:1fr}.add-card small{display:block}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+    [hidden]{display:none!important}.video-sync-status{margin:18px 0;color:#675f59;font-size:13px}.video-sync-status[data-error="true"]{color:#7e2f40}
   </style>
 </head>
 <body>
@@ -157,6 +158,7 @@
   </header>
 
   <main>
+    <p class="video-sync-status" id="video-sync-status" role="status" aria-live="polite">正在读取共享视频…</p>
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-meta"><span>VIDEO ARCHIVE</span><span id="hero-count">00 FILMS</span></div>
       <div class="hero-body">
@@ -172,14 +174,14 @@
     <section class="section reveal-section" aria-labelledby="vlog-title">
       <div class="section-heading"><div class="section-heading-copy"><h2 id="vlog-title">VLOG</h2><p>日常、旅行与一起经历的片段</p></div><a class="more-link" href="vlog.html">查看全部 →</a></div>
       <div class="video-grid" id="vlog-grid">
-        <button class="add-card" type="button" data-category="vlog" aria-label="添加 VLOG 链接"><span>＋</span><strong>添加 VLOG</strong><small>粘贴链接并选择封面</small></button>
+        <button class="add-card" type="button" data-category="vlog" aria-label="添加 VLOG 链接" hidden><span>＋</span><strong>添加 VLOG</strong><small>粘贴链接并选择封面</small></button>
       </div>
     </section>
 
     <section class="section reveal-section" aria-labelledby="dance-title">
       <div class="section-heading"><div class="section-heading-copy"><h2 id="dance-title">dancee</h2><p>舞蹈练习、作品与喜欢的瞬间</p></div><a class="more-link" href="dancee.html">查看全部 →</a></div>
       <div class="video-grid" id="dancee-grid">
-        <button class="add-card" type="button" data-category="dancee" aria-label="添加 dancee 链接"><span>＋</span><strong>添加 dancee</strong><small>粘贴链接并选择封面</small></button>
+        <button class="add-card" type="button" data-category="dancee" aria-label="添加 dancee 链接" hidden><span>＋</span><strong>添加 dancee</strong><small>粘贴链接并选择封面</small></button>
       </div>
     </section>
 
@@ -202,7 +204,11 @@
   </dialog>
   <div class="video-toast" id="video-toast" role="status" aria-live="polite"></div>
 
-  <script src="assets/video-library.js?v=20261109f"></script>
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+  <script src="assets/cloudbase-dates-config.js?v=20261026b"></script>
+  <script src="assets/cloudbase-config.js?v=20261026c"></script>
+  <script src="assets/cloudbase-client.js?v=20261028e"></script>
+  <script src="assets/video-library.js?v=20261126a"></script>
   <script>
     document.getElementById('back').addEventListener('click',()=>{if(sessionStorage.getItem('nono-index-parent')==='1'&&history.length>1){sessionStorage.removeItem('nono-index-parent');sessionStorage.setItem('nono-index-reset','1');history.back()}else location.replace('index.html')});
     const dialog=document.getElementById('link-dialog');
@@ -240,7 +246,7 @@
       card.rel='noopener noreferrer';
       card.innerHTML=`<div class="cover"><div class="link-cover"></div><span class="open-mark" aria-hidden="true">↗</span></div><div class="card-info"><h3 class="card-title"></h3></div>`;
       paintCard(card,item);
-      card.addEventListener('click',async event=>{if(!item.cover&&VideoLibrary.isDouyin(item.url)){event.preventDefault();const cover=await VideoLibrary.pickCover();if(cover){item.cover=cover;VideoLibrary.setCover(category,item.id,cover);paintCard(card,item)}}});
+      card.addEventListener('click',async event=>{if(!item.cover&&VideoLibrary.isDouyin(item.url)&&VideoLibrary.canWrite()){event.preventDefault();const cover=await VideoLibrary.pickCover();if(cover){try{await VideoLibrary.setCover(category,item.id,cover);item.cover=cover;paintCard(card,item)}catch(error){showToast(error.message||'封面保存失败',true)}}}});
       VideoLibrary.enrich(category,item).then(updated=>paintCard(card,updated));
       return card;
     }
@@ -251,6 +257,7 @@
         const grid=document.getElementById(`${category}-grid`);
         grid.querySelectorAll('.saved-card').forEach(card=>card.remove());
         const add=grid.querySelector('.add-card');
+        add.hidden=!VideoLibrary.canWrite();
         (links[category]||[]).slice(0,4).forEach((item,index)=>{const card=linkCard(item,category);card.style.setProperty('--order',index);grid.insertBefore(card,add)});
         add.style.setProperty('--order',Math.min((links[category]||[]).length,4));
       });
@@ -296,7 +303,7 @@
       try{
         const cover=coverInput.files[0]?await VideoLibrary.coverFromFile(coverInput.files[0]):'';
         const date=VideoLibrary.normalizeDate(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()));
-        VideoLibrary.add(activeCategory,{url,name:nameInput.value.trim(),date,cover});
+        await VideoLibrary.add(activeCategory,{url,name:nameInput.value.trim(),date,cover});
         renderLinks();
         dialog.close();
         form.reset();
@@ -319,7 +326,14 @@
       const opened=window.open(selected.url,'_blank');
       if(opened)opened.opener=null;
     });
-    renderLinks();
+    async function loadVideos(){
+      const status=document.getElementById('video-sync-status');
+      status.textContent='正在读取共享视频…';status.dataset.error='false';
+      try{await VideoLibrary.load();renderLinks();status.hidden=true}
+      catch(error){document.querySelectorAll('.add-card').forEach(button=>button.hidden=true);status.hidden=false;status.dataset.error='true';status.textContent=`共享视频暂时无法读取：${error.message||'请稍后刷新页面'}`}
+    }
+    loadVideos();
+    addEventListener('pageshow',event=>{if(event.persisted)loadVideos()});
   </script>
   <script src="assets/music-continuation.js?v=20261109e"></script>
 </body>

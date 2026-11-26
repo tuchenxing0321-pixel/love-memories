@@ -10,7 +10,7 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(path.join(source, 'sharedApi', 'index.js'), path.join(output, 'index.js'));
 await cp(path.join(source, 'sharedApi', 'package.json'), path.join(output, 'package.json'));
-for (const name of ['dateApi', 'memoryApi']) {
+for (const name of ['dateApi', 'memoryApi', 'videoApi']) {
   await cp(path.join(source, name), path.join(output, name), {
     recursive: true,
     filter: file => !file.endsWith('.test.js') && !file.endsWith('package.json')

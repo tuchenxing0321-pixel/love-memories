@@ -1,14 +1,7 @@
 (function(){
-  const key='nono-video-links-v2';
-  const legacyKey='nono-video-links-v1';
   const coverMaxBytes=2*1024*1024;
-  const defaults={
-    vlog:[
-      {id:'builtin-vlog-1',url:'https://www.bilibili.com/video/BV1v97U6GEH6/',name:"Nono's Vlog.1",date:'2026.06.06',cover:'assets/video/nono-vlog-1.jpg'},
-      {id:'builtin-vlog-2',url:'https://www.bilibili.com/video/BV1L4pY6VEpe/',name:'《下一个是谁》Reaction · 第四季第一期',date:'2026.10.10',cover:'assets/video/reaction-episode-1.jpg'}
-    ],
-    dancee:[]
-  };
+  let cache={vlog:[],dancee:[]},access={canWrite:false,role:'viewer'};
+  const call=(action,payload={})=>window.CloudBaseClient.callFunction('videoApi',action,payload);
 
   function safeUrl(value){
     try{const url=new URL(String(value||''));return url.protocol==='https:'||url.protocol==='http:'?url.href:''}catch{return''}
@@ -32,57 +25,38 @@
     return url.hostname.toLowerCase()==='v.douyin.com'&&/^\/example\/?$/i.test(url.pathname);
   }
 
-  function migrate(){
-    let legacy={vlog:[],dancee:[]};
-    try{legacy=JSON.parse(localStorage.getItem(legacyKey))||legacy}catch{}
-    const byUrl=new Map(defaults.vlog.map(item=>[item.url.split('?')[0].replace(/\/$/,''),item]));
-    (Array.isArray(legacy.vlog)?legacy.vlog:[]).forEach(item=>{
-      const fullUrl=safeUrl(item?.url);
-      if(!fullUrl)return;
-      const url=fullUrl.split('?')[0].replace(/\/$/,''),previous=byUrl.get(url)||{};
-      byUrl.set(url,{...previous,...item,url:fullUrl});
-    });
-    return {vlog:[...byUrl.values()],dancee:Array.isArray(legacy.dancee)?legacy.dancee:[]};
+  function read(){return cache}
+  function canWrite(){return access.canWrite}
+  async function load(){
+    access={canWrite:false,role:'viewer'};
+    const data=await call('listVideos');
+    if(!data||!Array.isArray(data.vlog)||!Array.isArray(data.dancee))throw new Error('云端视频数据格式不正确');
+    cache={vlog:data.vlog,dancee:data.dancee};
+    try{access=await call('getVideoAccess')}catch{access={canWrite:false,role:'viewer'}}
+    return cache;
   }
 
-  function read(){
-    let data;
-    try{data=JSON.parse(localStorage.getItem(key))}catch{}
-    if(!data||typeof data!=='object'||Array.isArray(data)||!Array.isArray(data.vlog)||!Array.isArray(data.dancee)){data=migrate();write(data)}
-    data.vlog=Array.isArray(data.vlog)?data.vlog:[];
-    data.dancee=Array.isArray(data.dancee)?data.dancee:[];
-    let changed=false;
-    ['vlog','dancee'].forEach(category=>{
-      const previous=data[category];
-      data[category]=previous.filter(item=>item&&safeUrl(item.url)&&!isPlaceholderUrl(item.url)).map(item=>{const url=safeUrl(item.url),date=normalizeDate(item.date);if(url!==item.url||date!==item.date){changed=true;return{...item,url,date}}return item});
-      if(data[category].length!==previous.length)changed=true;
-      data[category].forEach(item=>{if(!item.id){item.id=`${Date.now()}-${Math.random().toString(36).slice(2)}`;changed=true}});
-    });
-    if(changed)write(data);
-    try{localStorage.removeItem(legacyKey)}catch{}
-    return data;
-  }
-
-  function write(data){localStorage.setItem(key,JSON.stringify(data))}
-
-  function add(category,item){
+  async function add(category,item){
     const url=safeUrl(item?.url);
     if(!['vlog','dancee'].includes(category)||!url)throw new Error('只支持 http 或 https 视频链接');
     if(isPlaceholderUrl(url))throw new Error('请粘贴真实视频链接');
-    const data=read();
-    data[category].unshift({id:`${Date.now()}-${Math.random().toString(36).slice(2)}`,...item,url,date:normalizeDate(item.date)});
-    write(data);
+    if(!canWrite())throw new Error('只有主人或管理员可以添加视频');
+    const saved=await call('addVideo',{category,url,name:String(item.name||'').trim(),date:normalizeDate(item.date),cover:item.cover||''});
+    cache[category].unshift(saved);
+    return saved;
   }
 
-  function remove(category,id){
-    const data=read();
-    data[category]=data[category].filter(item=>item.id!==id);
-    write(data);
+  async function remove(category,id){
+    if(!canWrite())throw new Error('只有主人或管理员可以删除视频');
+    await call('removeVideo',{id});
+    cache[category]=cache[category].filter(item=>item.id!==id);
   }
 
-  function setCover(category,id,cover){
-    const data=read(),item=data[category].find(entry=>entry.id===id);
-    if(item){item.cover=cover;write(data)}
+  async function setCover(category,id,cover){
+    if(!canWrite())throw new Error('只有主人或管理员可以修改封面');
+    await call('setVideoCover',{id,cover});
+    const item=cache[category].find(entry=>entry.id===id);
+    if(item)item.cover=cover;
   }
 
   function isDouyin(value){const url=safeUrl(value);return Boolean(url)&&/(^|\.)douyin\.com$/i.test(new URL(url).hostname)}
@@ -137,9 +111,6 @@
         if(response?.code!==0)return finish(item);
         const published=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(response.data.pubdate*1000));
         const updated={...item,cover:response.data.pic.replace(/^http:/,'https:'),autoName:response.data.title,date:normalizeDate(published)};
-        const data=read();
-        const index=data[category].findIndex(entry=>entry.id===item.id);
-        if(index>=0){data[category][index]=updated;write(data)}
         finish(updated);
       };
       script.onerror=()=>{clearTimeout(timer);finish(item)};
@@ -149,5 +120,5 @@
   }
 
   console.assert(title({url:'https://example.com/watch'})==='example.com'&&safeUrl('javascript:alert(1)')===''&&isPlaceholderUrl('https://v.douyin.com/example/')&&normalizeDate('2026.9.3')==='2026.09.03'&&dateKey('2026.11.10')>dateKey('2026.9.30')&&Math.abs(coverScale(1000,4000)-.3)<.001,'视频链接、日期或封面缩放校验异常');
-  window.VideoLibrary={read,add,remove,setCover,isDouyin,isPlaceholderUrl,title,coverFromFile,pickCover,enrich,safeUrl,normalizeDate,dateKey};
+  window.VideoLibrary={load,read,canWrite,add,remove,setCover,isDouyin,isPlaceholderUrl,title,coverFromFile,pickCover,enrich,safeUrl,normalizeDate,dateKey};
 })();

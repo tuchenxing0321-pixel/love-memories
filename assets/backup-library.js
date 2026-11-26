@@ -88,7 +88,7 @@
       readStore('nono-memory-archive', 'memories'),
       readStore('nono-profile-gallery', 'photos')
     ]);
-    const videos = window.VideoLibrary ? window.VideoLibrary.read() : readJson(VIDEO_KEY, { vlog: [], dancee: [] });
+    const videos = readJson(VIDEO_KEY, { vlog: [], dancee: [] });
     const dates = readJson(DATES_KEY, []);
     return {
       format: FORMAT,

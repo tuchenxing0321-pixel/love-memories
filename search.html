@@ -25,7 +25,7 @@
   <script src="assets/cloudbase-client.js?v=20261028e"></script>
   <script src="assets/cloud-memory-library.js?v=20261026c"></script>
   <script src="assets/cloudbase-dates-client.js?v=20261026b"></script>
-  <script src="assets/video-library.js?v=20261109f"></script>
+  <script src="assets/video-library.js?v=20261126a"></script>
   <script>
     const $=id=>document.getElementById(id),esc=value=>String(value||'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
     const normalize=value=>String(value||'').trim().toLocaleLowerCase('zh-CN');
@@ -45,17 +45,19 @@
       $('status').textContent='正在读取档案';
       $('results').innerHTML=stateMarkup('loading','正在整理档案','回忆、日期和视频会一起出现在这里。');
       const memoryState=MemoryLibrary.status(),dateState=CloudBaseDatesClient.status();
-      const [memoryResult,dateResult]=await Promise.allSettled([
+      const [memoryResult,dateResult,videoResult]=await Promise.allSettled([
         memoryState.ready?MemoryLibrary.all():Promise.reject(new Error(memoryState.reason||'CloudBase 回忆尚未连接')),
-        dateState.ready?CloudBaseDatesClient.call('listDates'):Promise.reject(new Error(dateState.reason||'CloudBase 日期尚未连接'))
+        dateState.ready?CloudBaseDatesClient.call('listDates'):Promise.reject(new Error(dateState.reason||'CloudBase 日期尚未连接')),
+        VideoLibrary.load()
       ]);
       unavailableSources=[];
       if(memoryResult.status==='rejected')unavailableSources.push('回忆');
       if(dateResult.status==='rejected')unavailableSources.push('日期');
+      if(videoResult.status==='rejected')unavailableSources.push('视频');
       const sharedMemories=memoryResult.status==='fulfilled'&&Array.isArray(memoryResult.value)?memoryResult.value:[];
       const sharedDates=dateResult.status==='fulfilled'&&Array.isArray(dateResult.value)?dateResult.value:[];
       const memories=sharedMemories.map(memorySearchItem);
-      const videos=VideoLibrary.read(),videoItems=['vlog','dancee'].flatMap(category=>videos[category].map(item=>{const title=VideoLibrary.title(item);return {type:'视频',title,date:item.date,description:category==='vlog'?'VLOG':'DANCE',search:[title,item.date,category].join(' '),href:item.url||'video.html',external:Boolean(item.url)}}));
+      const videos=videoResult.status==='fulfilled'?videoResult.value:{vlog:[],dancee:[]},videoItems=['vlog','dancee'].flatMap(category=>(videos[category]||[]).map(item=>{const title=VideoLibrary.title(item);return {type:'视频',title,date:item.date,description:category==='vlog'?'VLOG':'DANCE',search:[title,item.date,category].join(' '),href:item.url||'video.html',external:Boolean(item.url)}}));
       const important=[{id:'anniversary',title:'在一起的第一天',date:'2025-09-17',note:'nono & txx'},...sharedDates].map(item=>({type:'日期',title:item.title||'重要日期',date:item.date,description:item.note||'',search:[item.title,item.note,item.date,formatDate(item.date)].join(' '),href:'dates.html#archive'}));
       items=[...memories,...important,...videoItems].sort((a,b)=>sortable(b.date).localeCompare(sortable(a.date)));
       render();

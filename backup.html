@@ -15,24 +15,24 @@
 <body>
   <header class="top"><button class="back" id="back" type="button">← 返回</button><div class="brand"><img src="assets/site-logo-128.png" alt=""><span>nono &amp; txx</span></div><span class="status">仅限本机</span></header>
   <main>
-    <section class="intro"><h1>本地备份与恢复</h1><p>把这个浏览器仍保存的回忆、个人主页照片、视频链接和本地日期导出成文件。该文件不包含 CloudBase 中的共享回忆与共享日期。</p></section>
+    <section class="intro"><h1>本地备份与恢复</h1><p>把这个浏览器仍保存的旧回忆、个人主页照片、旧视频链接和旧日期导出成文件。该文件不包含 CloudBase 中的共享回忆、日期与视频。</p></section>
     <section class="grid">
       <article class="card"><h2>导出本地资料</h2><p>生成包含本地图片数据的 JSON 文件。文件只会下载到这台电脑，不会上传到服务器。</p><div class="card-actions"><button class="primary" id="export" type="button">下载本地备份</button></div><div class="summary" id="currentSummary" data-ui-kind="loading">正在读取本地资料…</div></article>
       <article class="card"><h2>恢复到这个浏览器</h2><p>先选择备份文件并核对内容数量。确认后只会替换当前浏览器的本地资料，不会覆盖 CloudBase 共享内容。</p><div class="card-actions"><label class="secondary file">选择备份文件<input id="importFile" type="file" accept="application/json,.json"></label><button class="primary" id="restore" type="button" hidden>确认恢复</button></div><div class="summary" id="importSummary" data-ui-kind="ready">尚未选择备份文件。</div></article>
     </section>
-    <p class="notice"><strong>范围说明：</strong>此文件不包含 CloudBase 共享回忆和共享日期。文件本身没有加密，可能包含私人照片和文字；请勿放入网站目录或公开分享。秘密页的加密图片不会被导出。</p>
+    <p class="notice"><strong>范围说明：</strong>此文件不包含 CloudBase 共享回忆、日期和视频。文件本身没有加密，可能包含私人照片和文字；请勿放入网站目录或公开分享。秘密页的加密图片不会被导出。</p>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="assets/video-library.js?v=20261109f"></script>
-  <script src="assets/backup-library.js?v=20261023a"></script>
+  <script src="assets/backup-library.js?v=20261126a"></script>
   <script>
     const $=id=>document.getElementById(id);let pending=null,timer=0;
-    const describe=value=>`本地旧回忆 ${value.memories} · 个人照片 ${value.profiles} · 视频 ${value.videos} · 本地日期 ${value.dates} · 不含 CloudBase 共享资料`;
+    const describe=value=>`本地旧回忆 ${value.memories} · 个人照片 ${value.profiles} · 旧视频 ${value.videos} · 本地日期 ${value.dates} · 不含 CloudBase 共享资料`;
     function toast(message,error=false){clearTimeout(timer);$('toast').textContent=message;$('toast').classList.toggle('error',error);$('toast').classList.add('show');timer=setTimeout(()=>$('toast').classList.remove('show'),2600)}
     async function refresh(){$('currentSummary').dataset.uiKind='loading';$('currentSummary').textContent='正在读取本地资料…';try{const data=await BackupLibrary.snapshot();$('currentSummary').dataset.uiKind='ready';$('currentSummary').innerHTML=`当前内容：<b>${describe(BackupLibrary.counts(data))}</b>`}catch(error){$('currentSummary').dataset.uiKind='error';$('currentSummary').textContent=error.message||'无法读取本地资料。';toast(error.message||'无法读取本地资料。',true)}}
     $('export').onclick=async()=>{const button=$('export'),label=button.textContent;button.disabled=true;button.textContent='正在生成…';try{const data=await BackupLibrary.snapshot();BackupLibrary.download(data);toast('备份文件已生成。')}catch(error){toast(error.message||'备份失败，请重试。',true)}finally{button.disabled=false;button.textContent=label}};
     $('importFile').onchange=async()=>{pending=null;$('restore').hidden=true;const file=$('importFile').files[0];if(!file){$('importSummary').dataset.uiKind='ready';$('importSummary').textContent='尚未选择备份文件。';return}$('importSummary').dataset.uiKind='loading';$('importSummary').textContent='正在检查备份文件…';try{pending=await BackupLibrary.fromFile(file);const count=BackupLibrary.counts(pending);$('importSummary').dataset.uiKind='ready';$('importSummary').innerHTML=`文件日期：<b>${new Date(pending.createdAt).toLocaleString('zh-CN')}</b><br>包含：<b>${describe(count)}</b>`;$('restore').hidden=false}catch(error){$('importSummary').dataset.uiKind='error';$('importSummary').textContent=error.message||'无法读取这个备份文件。';toast(error.message||'无法读取这个备份文件。',true)}};
-    $('restore').onclick=async()=>{if(!pending)return;if(!confirm('恢复会替换这个浏览器中的本地回忆、个人照片、视频和本地日期；不会修改 CloudBase 共享资料。确定继续吗？'))return;const button=$('restore'),label=button.textContent;button.disabled=true;button.textContent='正在恢复…';try{await BackupLibrary.restore(pending);toast('本地资料已恢复。');pending=null;$('importFile').value='';button.hidden=true;$('importSummary').dataset.uiKind='ready';$('importSummary').textContent='本地资料恢复完成。CloudBase 共享内容未修改。';await refresh()}catch(error){$('importSummary').dataset.uiKind='error';toast(error.message||'恢复失败，原有本地资料已尽力保留。',true)}finally{button.disabled=false;button.textContent=label}};
+    $('restore').onclick=async()=>{if(!pending)return;if(!confirm('恢复会替换这个浏览器中的旧回忆、个人照片、旧视频和旧日期；不会修改 CloudBase 共享资料。确定继续吗？'))return;const button=$('restore'),label=button.textContent;button.disabled=true;button.textContent='正在恢复…';try{await BackupLibrary.restore(pending);toast('本地资料已恢复。');pending=null;$('importFile').value='';button.hidden=true;$('importSummary').dataset.uiKind='ready';$('importSummary').textContent='本地资料恢复完成。CloudBase 共享内容未修改。';await refresh()}catch(error){$('importSummary').dataset.uiKind='error';toast(error.message||'恢复失败，原有本地资料已尽力保留。',true)}finally{button.disabled=false;button.textContent=label}};
     $('back').onclick=()=>{if(sessionStorage.getItem('nono-index-parent')==='1'&&history.length>1){sessionStorage.removeItem('nono-index-parent');sessionStorage.setItem('nono-index-reset','1');history.back()}else location.replace('index.html')};
     refresh();
   </script>
