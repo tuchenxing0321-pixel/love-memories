@@ -15,6 +15,7 @@
 3. 在 PostgreSQL 执行 `cloudbase/access-control.sql`。
 4. 用真实 UID 执行文件末尾的主人初始化 SQL。不要把用户名、昵称或邮箱当成 UID。
 5. 部署新版 `memoryApi` 和 `dateApi`，并在云函数调用权限中放行两个函数的 SDK 调用。
+   如果当前环境使用单个 `sharedApi` 函数承载两组操作，先运行 `node scripts/build-shared-api.mjs`，上传生成的 `dist/sharedApi`；不要直接上传缺少子目录的 `cloudfunctions/sharedApi`。
 6. 先用匿名窗口验证只读，再用主人账号验证新增、编辑、删除。
 7. 验收通过后再上传网页文件。
 
