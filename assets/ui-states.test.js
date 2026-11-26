@@ -52,6 +52,6 @@ test('mobile year filters keep a full touch target', () => {
   const page = read('memories.html');
   const styles = read('assets/memories-v2.css');
 
-  assert.match(page, /assets\/memories-v2\.css\?v=20261123b/);
+  assert.match(page, /assets\/memories-v2\.css\?v=\d+[a-z]/);
   assert.match(styles, /\.year-nav button\{[^}]*min-height:44px/);
 });

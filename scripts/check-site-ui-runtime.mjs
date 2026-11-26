@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from '/Users/tt/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const pages = ['index.html', 'memories.html', 'video.html', 'vlog.html', 'dancee.html', 'dates.html', 'search.html', 'backup.html', 'lens.html', 'secret.html', 'auth.html'];
+const pages = ['index.html', 'memories.html', 'video.html', 'vlog.html', 'dancee.html', 'dates.html', 'search.html', 'backup.html', 'lens.html', 'secret.html', 'auth.html', 'creative.html'];
 const variants = [
   { name: 'desktop', viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' },
   { name: 'mobile-reduced', viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' }
@@ -50,7 +50,7 @@ try {
         contentType: route.request().url().includes('fonts.googleapis.com') ? 'text/css' : 'text/javascript',
         body: ''
       }));
-      await page.goto(`http://127.0.0.1:${port}/${filename}`, { waitUntil: 'domcontentloaded' });
+      await page.goto(`http://127.0.0.1:${port}/${filename}${filename === 'creative.html' ? '?demo=1' : ''}`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(filename === 'index.html' ? 650 : 250);
 
       const state = await page.evaluate(() => {
@@ -95,6 +95,33 @@ try {
       await page.close();
     }
   }
+  const fallbackPage = await browser.newPage();
+  await fallbackPage.addInitScript(() => { window.WebGLRenderingContext = undefined; });
+  await fallbackPage.route('**/cloud-photo-source.js*', route => route.fulfill({
+    contentType: 'text/javascript',
+    body: 'window.MemoryUniversePhotoSource = async () => [];'
+  }));
+  await fallbackPage.goto(`http://127.0.0.1:${port}/creative.html`, { waitUntil: 'networkidle' });
+  const emptyFallback = await fallbackPage.locator('.memory-universe__empty').isVisible();
+  const blankFallback = await fallbackPage.locator('.memory-universe__fallback').isVisible();
+  if (!emptyFallback || blankFallback) throw new Error('creative.html has a blank fallback when no photos exist');
+  await fallbackPage.close();
+  const photoFallback = await browser.newPage();
+  await photoFallback.addInitScript(() => { window.WebGLRenderingContext = undefined; });
+  await photoFallback.goto(`http://127.0.0.1:${port}/creative.html?demo=1`, { waitUntil: 'networkidle' });
+  if (await photoFallback.locator('.memory-universe__fallback-grid a[target="_blank"]').count() !== 8) {
+    throw new Error('creative.html fallback does not allow every photo to be enlarged');
+  }
+  await photoFallback.close();
+  const layoutPage = await browser.newPage();
+  await layoutPage.goto(`http://127.0.0.1:${port}/creative.html?demo=1`, { waitUntil: 'networkidle' });
+  const layoutCounts = await layoutPage.evaluate(async () => {
+    const { MemoryUniverse } = await import('./assets/memory-universe/memory-universe.js');
+    const universe = new MemoryUniverse(document.querySelector('#memory-universe'));
+    return [100, 300].map(count => universe.createLayout(count).length);
+  });
+  if (layoutCounts.join(',') !== '100,300') throw new Error(`creative.html lost photos in larger layouts: ${layoutCounts}`);
+  await layoutPage.close();
   console.log(`site UI runtime check passed (${pages.length * variants.length} page variants)`);
 } finally {
   await browser.close();

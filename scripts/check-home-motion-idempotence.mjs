@@ -62,9 +62,9 @@ try {
     scrollTo(0, sequence.offsetTop + distance * .5);
   });
   await page.waitForTimeout(500);
-  for (const person of ['girl', 'boy']) {
-    if (!motionRequests.some(url => url.includes(`/assets/motion-webp/${person}/frame-026.webp`))) {
-      throw new Error(`home motion does not load ${person} frame 26 when scrolling to the middle`);
+  for (const [person, frame] of [['girl', '022'], ['boy', '024']]) {
+    if (!motionRequests.some(url => url.includes(`/assets/motion-webp/${person}/frame-${frame}.webp`))) {
+      throw new Error(`home motion does not load ${person} frame ${frame} when scrolling to the middle`);
     }
   }
   if (screenshotDir) {

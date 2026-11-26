@@ -572,19 +572,29 @@ export class MemoryUniverse {
   async showFallback() {
     this.loading.classList.add("is-finished");
     const fallback = this.root.querySelector(".memory-universe__fallback");
-    fallback.hidden = false;
     try {
       const memories = this.memories || await this.loadMemories();
+      if (!memories.length) {
+        this.showEmptyState();
+        return;
+      }
+      fallback.hidden = false;
       const grid = fallback.querySelector(".memory-universe__fallback-grid");
       memories.forEach((memory) => {
         const figure = document.createElement("figure");
+        const link = document.createElement("a");
         const image = document.createElement("img");
         const caption = document.createElement("figcaption");
         image.loading = "lazy";
         image.src = new URL(memory.thumbnail, DATA_URL).href;
         image.alt = memory.title;
+        link.href = new URL(memory.src, DATA_URL).href;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.setAttribute("aria-label", `放大查看：${memory.title}`);
         caption.textContent = memory.title;
-        figure.append(image, caption);
+        link.append(image);
+        figure.append(link, caption);
         grid.append(figure);
       });
     } catch (error) {
