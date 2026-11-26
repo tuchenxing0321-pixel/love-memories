@@ -402,8 +402,9 @@
       event.preventDefault(); if (!requireAccess()) return; const button = $('photoSave');
       if (button.disabled) return; button.disabled = true; button.textContent = '添加中…';
       let addedCount = 0;
+      let images = [];
       try {
-        const images = await MemoryLibrary.imagesFromFiles($('photoFile').files);
+        images = await MemoryLibrary.imagesFromFiles($('photoFile').files);
         const photoDate = $('photoDate').value || MemoryLibrary.today();
         const photoTitle = $('photoTitle').value.trim() || '一张照片';
         for (const image of images) {
@@ -414,9 +415,13 @@
         pendingPhotoId = images.at(-1)?.id || '';
         $('photoManager').close(); $('photoForm').reset(); await render(); toast(`${images.length} 张图片已添加`);
       } catch (error) {
-        if (addedCount) {
-          $('photoManager').close(); $('photoForm').reset(); await render();
-          toast(`已添加 ${addedCount} 张；后续照片未完成：${readableError(error)}。请只重新选择未上传的照片。`, true);
+        if (images.length) await render();
+        if (!cloudReady && images.length) return toast('上传状态暂时无法确认。请刷新照片库，确认后再重试，避免重复。', true);
+        const saved = images.filter(image => records.some(record => record.images?.some(stored => stored.id === image.id)));
+        if (saved.length) {
+          pendingPhotoId = saved.at(-1).id;
+          $('photoManager').close(); $('photoForm').reset();
+          toast(`已确认 ${saved.length} 张上传成功；请只重新选择未上传的照片。${readableError(error)}`, true);
         } else toast(readableError(error), true);
       }
       finally { button.disabled = false; button.textContent = '添加所选图片'; }
@@ -425,13 +430,25 @@
     $('eventForm').onsubmit = async event => {
       event.preventDefault(); if (!requireAccess()) return; const button = $('eventSave');
       if (button.disabled) return; button.disabled = true; button.textContent = '保存中…';
+      let added = [];
+      let eventId = '';
       try {
         const old = records.find(record => record.id === $('eventId').value);
-        const added = await MemoryLibrary.imagesFromFiles($('eventImages').files);
+        added = await MemoryLibrary.imagesFromFiles($('eventImages').files);
+        eventId = old?.id || crypto.randomUUID();
+        await MemoryLibrary.put({id:eventId,kind:'event',title:$('eventTitle').value.trim(),date:$('eventDate').value,eventType:$('eventType').value,story:$('eventStory').value.trim(),place:$('eventPlace').value.trim(),images:[...(old?.images || []),...added],isExample:false});
         if (added.length) pendingPhotoId = added.at(-1).id;
-        await MemoryLibrary.put({id:old?.id || crypto.randomUUID(),kind:'event',title:$('eventTitle').value.trim(),date:$('eventDate').value,eventType:$('eventType').value,story:$('eventStory').value.trim(),place:$('eventPlace').value.trim(),images:[...(old?.images || []),...added],isExample:false});
         $('eventEditor').close(); await render(); toast(old ? '事件已更新' : '事件已加入时间线');
-      } catch (error) { toast(readableError(error), true); }
+      } catch (error) {
+        if (eventId) await render();
+        if (!cloudReady && eventId) return toast('保存状态暂时无法确认。请刷新时间线，确认后再重试，避免重复。', true);
+        const saved = added.filter(image => records.find(record => record.id === eventId)?.images?.some(stored => stored.id === image.id));
+        if (saved.length) {
+          pendingPhotoId = saved.at(-1).id;
+          $('eventEditor').close(); $('eventImages').value = '';
+          toast(`事件已保存，确认有 ${saved.length} 张新照片；请只重新选择未上传的照片。${readableError(error)}`, true);
+        } else toast(readableError(error), true);
+      }
       finally { button.disabled = false; button.textContent = '保存事件'; }
     };
 
@@ -439,12 +456,23 @@
     $('detailImageInput').onchange = async () => {
       const event = records.find(record => record.id === activeEventId);
       if (!event || !$('detailImageInput').files.length) return;
+      let added = [];
       try {
-        const added = await MemoryLibrary.imagesFromFiles($('detailImageInput').files);
+        added = await MemoryLibrary.imagesFromFiles($('detailImageInput').files);
+        await MemoryLibrary.put({ ...event, images: [...event.images, ...added] }); $('detailImageInput').value = '';
         pendingPhotoId = added.at(-1)?.id || '';
-        event.images = [...event.images, ...added]; await MemoryLibrary.put(event); $('detailImageInput').value = '';
         await render(); showEvent(event.id); toast(`${added.length} 张图片已加入事件`);
-      } catch (error) { toast(readableError(error), true); }
+      } catch (error) {
+        $('detailImageInput').value = '';
+        if (added.length) await render();
+        if (!cloudReady && added.length) return toast('上传状态暂时无法确认。请刷新事件照片，确认后再重试，避免重复。', true);
+        const saved = added.filter(image => records.find(record => record.id === event.id)?.images?.some(stored => stored.id === image.id));
+        if (saved.length) {
+          pendingPhotoId = saved.at(-1).id;
+          showEvent(event.id);
+          toast(`已确认 ${saved.length} 张上传成功；请只重新选择未上传的照片。${readableError(error)}`, true);
+        } else toast(readableError(error), true);
+      }
     };
     $('detailEdit').onclick = () => { const event = records.find(record => record.id === activeEventId); $('detail').close(); openEventEditor(event); };
     $('detailDelete').onclick = async () => {

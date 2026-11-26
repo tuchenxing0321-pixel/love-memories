@@ -11,7 +11,7 @@ const {
   validatePayload,
   validatePhoto
 } = require('./core');
-const { runTrackedRemoval, runTrackedUpload } = require('./lifecycle');
+const { runTrackedRemoval, runTrackedUpload, unfinishedUploadExpired } = require('./lifecycle');
 
 const app = cloudbase.init({
   env: cloudbase.SYMBOL_CURRENT_ENV,
@@ -195,7 +195,7 @@ async function cleanupExpired() {
     query(db.from('shared_memory_items').select('*')),
     query(db.from('shared_memory_photos').select('*'))
   ]);
-  for (const photo of photos.filter(photo => (photo.upload_state || 'active') !== 'active')) {
+  for (const photo of photos.filter(photo => unfinishedUploadExpired(photo))) {
     try {
       await removeStoredFile(photo);
       await query(db.from('shared_memory_photos').delete().eq('id', photo.id));

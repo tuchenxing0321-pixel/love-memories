@@ -2,7 +2,16 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { runTrackedRemoval, runTrackedUpload } = require('./lifecycle');
+const { runTrackedRemoval, runTrackedUpload, unfinishedUploadExpired } = require('./lifecycle');
+
+test('cleanup leaves an in-flight upload alone and recovers old pending uploads', () => {
+  const now = Date.parse('2026-11-26T12:00:00.000Z');
+  assert.equal(unfinishedUploadExpired({ upload_state: 'pending', created_at: '2026-11-26T11:59:00.000Z' }, now), false);
+  assert.equal(unfinishedUploadExpired({ upload_state: 'pending', created_at: '2026-11-26T11:30:00.000Z' }, now), true);
+  assert.equal(unfinishedUploadExpired({ upload_state: 'pending', created_at: 'invalid' }, now), false);
+  assert.equal(unfinishedUploadExpired({ upload_state: 'cleanup' }, now), true);
+  assert.equal(unfinishedUploadExpired({ upload_state: 'active', created_at: '2026-11-26T00:00:00.000Z' }, now), false);
+});
 
 test('persists a pending record before uploading and activates it afterward', async () => {
   const calls = [];
