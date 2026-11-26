@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f7f4">
+  <link rel="icon" href="assets/site-logo-128.png">
+  <link rel="stylesheet" href="assets/page-transitions.css?v=20261123b">
+  <link rel="stylesheet" href="assets/photo-manager.css?v=20261126b">
+  <title>管理照片 · nono &amp; txx</title>
+</head>
+<body>
+  <header class="top"><a href="memories.html" class="back">← 回忆</a><span class="brand">nono &amp; txx</span><span class="top-note">仅已授权账号可编辑</span></header>
+  <main>
+    <div class="heading"><div><h1>管理照片</h1><p>先把照片放进来，故事可以慢慢补。</p></div><span id="count" class="count"></span></div>
+    <section class="upload" aria-labelledby="uploadTitle">
+      <div class="upload-copy"><h2 id="uploadTitle">添加照片</h2><p>一次最多上传 12 张。手机相册如果只选中一张，可以再点“继续选择”，照片会留在待上传区。</p></div>
+      <div class="upload-actions"><label class="pick">选择照片<input id="photoFiles" type="file" accept="image/*" multiple aria-label="选择多张照片"></label><button id="uploadButton" type="button" disabled>上传照片</button></div>
+      <div id="queue" class="queue" hidden></div>
+      <p id="uploadStatus" class="status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="library" aria-labelledby="libraryTitle"><div class="library-head"><h2 id="libraryTitle">全部照片</h2><span>点击照片可补充日期和说明，或删除</span></div><div id="grid" class="grid"><p class="empty">正在读取照片…</p></div></section>
+  </main>
+  <dialog id="editor" aria-labelledby="editorTitle"><form id="editForm" class="editor"><button id="closeEditor" class="close" type="button" aria-label="关闭">×</button><img id="editImage" alt=""><div class="edit-fields"><h2 id="editorTitle">这张照片</h2><label>照片说明<input id="caption" maxlength="120" placeholder="以后再写也可以"></label><label>照片日期<input id="date" type="date" required></label><label id="storyField">这张照片的故事或事件<textarea id="story" maxlength="1200" placeholder="想起什么，再写下来"></textarea></label><a id="eventLink" href="#" hidden>这张照片属于时间线事件，前往编辑 →</a><div class="edit-actions"><button id="deleteButton" class="delete" type="button">删除照片</button><button id="saveButton" class="save" type="submit">保存</button></div></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"><span id="toastText"></span><button id="undo" type="button" hidden>撤回</button></div>
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+  <script src="assets/cloudbase-dates-config.js?v=20261110a"></script>
+  <script src="assets/cloudbase-config.js?v=20261110a"></script>
+  <script src="assets/cloudbase-client.js?v=20261110a"></script>
+  <script src="assets/cloud-memory-library.js?v=20261126a"></script>
+  <script src="assets/photo-manager.js?v=20261126a"></script>
+  <script src="assets/music-continuation.js?v=20261109e"></script>
+</body>
+</html>

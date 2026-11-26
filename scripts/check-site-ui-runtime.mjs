@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from '/Users/tt/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const pages = ['index.html', 'memories.html', 'video.html', 'vlog.html', 'dancee.html', 'dates.html', 'search.html', 'backup.html', 'lens.html', 'secret.html', 'auth.html', 'creative.html'];
+const pages = ['index.html', 'memories.html', 'photo-manager.html', 'video.html', 'vlog.html', 'dancee.html', 'dates.html', 'search.html', 'backup.html', 'lens.html', 'secret.html', 'auth.html', 'creative.html'];
 const variants = [
   { name: 'desktop', viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' },
   { name: 'mobile-reduced', viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' }
@@ -101,6 +101,28 @@ try {
       await page.close();
     }
   }
+  const managerPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await managerPage.route('https://**/*', route => route.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+  await managerPage.route('**/assets/cloudbase-client.js*', route => route.fulfill({ contentType: 'text/javascript', body: 'window.CloudBaseClient={access:async()=>({canWrite:true})};' }));
+  await managerPage.route('**/assets/cloud-memory-library.js*', route => route.fulfill({ contentType: 'text/javascript', body: `
+    const items=[];
+    window.MemoryLibrary={today:()=> '2026-11-26',all:async()=>items,
+      imageFromFile:async()=>({id:crypto.randomUUID(),data:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',remote:false}),
+      put:async item=>items.push({...item,images:item.images.map(image=>({...image,remote:true,uploadedAt:'2026-11-26'}))}),
+      updatePhotoDetails:async()=>{},remove:async()=>{},removePhoto:async()=>{},restore:async()=>{},restorePhoto:async()=>{}};
+  ` }));
+  await managerPage.goto(`http://127.0.0.1:${port}/photo-manager.html`, { waitUntil: 'domcontentloaded' });
+  const photoFile = { name: 'photo.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+kZ1sAAAAASUVORK5CYII=', 'base64') };
+  await managerPage.locator('#photoFiles').setInputFiles([photoFile, { ...photoFile, name: 'photo2.png' }]);
+  await managerPage.locator('#photoFiles').setInputFiles({ ...photoFile, name: 'photo3.png' });
+  if (await managerPage.locator('.queued').count() !== 3 || await managerPage.locator('#uploadButton').textContent() !== '上传 3 张照片') {
+    throw new Error('mobile photo selection did not accumulate across picker openings');
+  }
+  await managerPage.locator('#uploadButton').click();
+  await managerPage.getByText('已上传 3 张照片。').waitFor();
+  if (await managerPage.locator('.photo').count() !== 3) throw new Error('mobile batch upload did not show all photos');
+  if (process.env.PHOTO_MANAGER_SCREENSHOT) await managerPage.screenshot({ path: process.env.PHOTO_MANAGER_SCREENSHOT, fullPage: true });
+  await managerPage.close();
   const fallbackPage = await browser.newPage();
   await fallbackPage.addInitScript(() => { window.WebGLRenderingContext = undefined; });
   await fallbackPage.route('**/cloud-photo-source.js*', route => route.fulfill({

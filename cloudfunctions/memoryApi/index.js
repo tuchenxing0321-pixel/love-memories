@@ -5,6 +5,7 @@ const {
   WRITE_LIMIT,
   WRITE_WINDOW_SECONDS,
   objectKeyFor,
+  validDate,
   validateId,
   validateMemory,
   validateObjectKey,
@@ -367,6 +368,19 @@ exports.main = async event => {
       await takeWriteSlot(uid);
       await addPhoto(memory, photo, uid);
       return ok({ memoryId, photoId: photo.id });
+    }
+
+    if (action === 'updatePhotoDetails') {
+      const id = validateId(payload.id, '照片');
+      const photo = await one('shared_memory_photos', id);
+      if (!photo || photo.deleted_at || photo.upload_state !== 'active') return fail('照片不存在', 404);
+      const caption = typeof payload.caption === 'string' ? payload.caption.trim() : '';
+      if (caption.length > 120) return fail('照片说明不能超过 120 个字符');
+      const date = payload.date;
+      if (!validDate(date)) return fail('请填写有效日期');
+      await takeWriteSlot(uid);
+      await query(db.from('shared_memory_photos').update({ caption, uploaded_at: date }).eq('id', id));
+      return ok({ id });
     }
 
     if (action === 'softDeletePhoto' || action === 'restorePhoto') {

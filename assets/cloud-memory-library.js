@@ -54,7 +54,10 @@
     const existing = cache.find(record => record.id === item.id);
     const pending = (item.images || []).filter(image => !image.remote);
     if (item.kind === 'photo') {
-      if (existing) return existing;
+      if (existing) {
+        await call('updateMemory', memoryPayload(item));
+        return item;
+      }
       if (pending.length !== 1) throw new Error('每条独立照片记录必须包含一张照片');
       await call('createStandalonePhoto', {
         memory: memoryPayload(item),
@@ -63,25 +66,13 @@
       return item;
     }
 
-    let created = false;
     if (existing) await call('updateMemory', memoryPayload(item));
-    else {
-      await call('createMemory', memoryPayload(item));
-      created = true;
-    }
-    try {
-      for (let index = 0; index < pending.length; index += 1) {
-        await call('addPhoto', {
-          memoryId: item.id,
-          photo: photoPayload(pending[index], (existing?.images?.length || 0) + index)
-        });
-      }
-    } catch (error) {
-      if (created) {
-        await call('softDeleteMemory', { id: item.id }).catch(() => {});
-        schedule('finalizeMemoryDelete', item.id);
-      }
-      throw error;
+    else await call('createMemory', memoryPayload(item));
+    for (let index = 0; index < pending.length; index += 1) {
+      await call('addPhoto', {
+        memoryId: item.id,
+        photo: photoPayload(pending[index], (existing?.images?.length || 0) + index)
+      });
     }
     return item;
   }
@@ -102,6 +93,10 @@
 
   async function restorePhoto(id) {
     await call('restorePhoto', { id });
+  }
+
+  async function updatePhotoDetails(id, caption, date) {
+    await call('updatePhotoDetails', { id, caption, date });
   }
 
   function imageFromFile(file) {
@@ -165,6 +160,7 @@
     restore,
     removePhoto,
     restorePhoto,
+    updatePhotoDetails,
     imageFromFile,
     imagesFromFiles,
     today,

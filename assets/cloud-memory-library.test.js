@@ -71,6 +71,16 @@ test('existing remote photos are not uploaded again when an event is edited', as
   assert.deepEqual(calls.map(call => call.action), ['listMemories', 'updateMemory']);
 });
 
+test('editing an existing standalone photo keeps its image and updates its story', async () => {
+  const remoteImage = { ...pendingImage, remote: true, data: 'https://example.test/signed.jpg' };
+  const saved = { ...event, kind: 'photo', title: '一张照片', images: [remoteImage] };
+  const { library, calls } = loadLibrary({ listMemories: [saved] });
+  await library.all();
+  await library.put({ ...saved, story: '后来补上的故事' });
+  assert.deepEqual(calls.map(call => call.action), ['listMemories', 'updateMemory']);
+  assert.equal(calls[1].payload.story, '后来补上的故事');
+});
+
 test('standalone photos and deletion use their dedicated server actions', async () => {
   const { library, calls, timers } = loadLibrary();
   await library.put({ ...event, kind: 'photo', title: '独立照片', images: [pendingImage] });

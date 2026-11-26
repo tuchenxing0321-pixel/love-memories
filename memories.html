@@ -84,8 +84,6 @@
     <p class="storage-note" id="storageNote" data-ui-kind="loading">正在读取 CloudBase 共享回忆…</p>
   </main>
 
-  <dialog id="photoManager" aria-labelledby="photoManagerHeading"><div class="inner"><div class="dialog-head"><div><h2 id="photoManagerHeading">管理照片</h2><p>查看全部照片，选择需要删除的那一张。</p></div><button class="icon-close" type="button" data-close="photoManager" aria-label="关闭">×</button></div><form class="form" id="photoForm"><section class="manager-library" aria-label="全部照片"><div class="manager-library-head"><strong id="managerCount">照片库共 0 张</strong><span>删除后 7 秒内可撤回</span></div><div class="manager-grid" id="managerGrid"></div></section><label class="field">照片名称<input id="photoTitle" maxlength="60" placeholder="例如：故事开始"></label><label class="field">拍摄日期<input id="photoDate" type="date"></label><label class="field wide">批量添加照片（一次最多 12 张）<span class="file-box"><input id="photoFile" type="file" accept="image/*" multiple required></span></label><div class="form-actions"><button class="secondary" type="button" data-close="photoManager">取消</button><button class="primary" id="photoSave" type="submit">添加所选照片</button></div></form></div></dialog>
-
   <dialog id="eventEditor" aria-labelledby="eventEditorTitle"><div class="inner"><div class="dialog-head"><h2 id="eventEditorTitle">添加事件</h2><button class="icon-close" type="button" data-close="eventEditor" aria-label="关闭">×</button></div><form class="form" id="eventForm"><input id="eventId" type="hidden"><label class="field wide">事件标题<input id="eventTitle" required maxlength="60"></label><label class="field">日期<input id="eventDate" type="date" required></label><label class="field">事件类型<select id="eventType"><option value="minor">小事件 · 黑色标志</option><option value="major">大事件 · 红色标志</option></select></label><label class="field wide">地点（可选）<input id="eventPlace" maxlength="80"></label><label class="field wide">事件内容<textarea id="eventStory" maxlength="1200" placeholder="把这一天写下来"></textarea></label><label class="field wide">添加照片（可多选）<span class="file-box"><input id="eventImages" type="file" accept="image/*" multiple></span></label><div class="form-actions"><button class="secondary" type="button" data-close="eventEditor">取消</button><button class="primary" id="eventSave" type="submit">保存事件</button></div></form></div></dialog>
 
   <dialog id="detail" aria-labelledby="detailTitle"><div class="detail-hero"><button class="icon-close" type="button" data-close="detail" aria-label="关闭">×</button><div class="detail-date" id="detailDate"></div><h2 id="detailTitle"></h2></div><div class="detail-body"><div class="detail-place" id="detailPlace"></div><p class="detail-story" id="detailStory"></p><div class="gallery" id="detailGallery"></div><div class="detail-actions"><button class="primary" id="detailAddImage" type="button">＋ 添加图片</button><button class="secondary" id="detailEdit" type="button">编辑事件</button><button class="danger" id="detailDelete" type="button">删除事件</button><input class="hidden" id="detailImageInput" type="file" accept="image/*" multiple aria-label="为当前事件选择要添加的图片"></div></div></dialog>
@@ -97,7 +95,7 @@
   <script src="assets/cloudbase-dates-config.js?v=20261026b"></script>
   <script src="assets/cloudbase-config.js?v=20261026c"></script>
   <script src="assets/cloudbase-client.js?v=20261028e"></script>
-  <script src="assets/cloud-memory-library.js?v=20261026c"></script>
+  <script src="assets/cloud-memory-library.js?v=20261126a"></script>
   <script>
     const MemoryLibrary = window.MemoryLibrary;
     const $ = id => document.getElementById(id);
@@ -148,7 +146,7 @@
     }
     function allPhotos() {
       const photos = [];
-      records.forEach(record => visibleImages(record).forEach(image => photos.push({recordId:record.id, kind:record.kind, title:record.title, date:image.uploadedAt || record.date, image})));
+      records.forEach(record => visibleImages(record).forEach(image => photos.push({recordId:record.id, kind:record.kind, title:image.caption || record.title, date:image.uploadedAt || record.date, image})));
       return photos.sort((a,b) => String(a.date).localeCompare(String(b.date)) || String(a.image.id).localeCompare(String(b.image.id)));
     }
     function randomizedPhotos(photos) {
@@ -343,21 +341,9 @@
       if (!$('detail').open) $('detail').showModal();
     }
 
-    function renderManagerGrid() {
-      $('managerCount').textContent = `照片库共 ${carouselPhotos.length} 张`;
-      if (!carouselPhotos.length) {
-        $('managerGrid').innerHTML = '<p class="manager-empty">还没有照片，可以从下方批量添加。</p>';
-        return;
-      }
-      $('managerGrid').innerHTML = carouselPhotos.map((photo, index) => `<article class="manager-card"><img src="${photo.image.data}" alt="${esc(photo.image.caption || photo.title || '回忆照片')}" loading="lazy" decoding="async"><div class="manager-card-copy"><b>${esc(photo.title || '一张照片')}</b><span>${formatDate(photo.date)} · ${photo.kind === 'event' ? '来自时间线' : '独立照片'}</span></div><button class="danger" type="button" data-manager-delete="${index}" aria-label="删除${esc(photo.title || '这张照片')}">删除</button></article>`).join('');
-      $('managerGrid').querySelectorAll('[data-manager-delete]').forEach(button => button.onclick = () => deletePhoto(carouselPhotos[Number(button.dataset.managerDelete)], true));
-    }
     function openPhotoManager() {
       if (!requireAccess()) return;
-      $('photoForm').reset();
-      $('photoDate').value = MemoryLibrary.today();
-      renderManagerGrid();
-      $('photoManager').showModal();
+      location.href = 'photo-manager.html';
     }
     function showPhoto(photo) {
       activePhoto = photo;
@@ -369,7 +355,7 @@
       if (!$('photoViewer').open) $('photoViewer').showModal();
     }
 
-    async function deletePhoto(photo, keepManagerOpen = false) {
+    async function deletePhoto(photo) {
       if (!requireAccess()) return;
       if (!photo || !confirm(`确定删除“${photo.title || '这张照片'}”吗？删除后可在 7 秒内撤回。`)) return;
       const owner = records.find(record => record.id === photo.recordId);
@@ -380,11 +366,9 @@
         if (owner.kind === 'photo') await MemoryLibrary.remove(owner.id);
         else await MemoryLibrary.removePhoto(photo.image.id);
         if ($('photoViewer').open) $('photoViewer').close();
-        if ($('photoManager').open && !keepManagerOpen) $('photoManager').close();
         activePhoto = null; pendingPhotoId = nextPhoto?.image.id || '';
         await render();
-        if ($('photoManager').open) renderManagerGrid();
-        toast('照片已删除', false, async () => { if (owner.kind === 'photo') await MemoryLibrary.restore(owner.id); else await MemoryLibrary.restorePhoto(photo.image.id); pendingPhotoId = photo.image.id; await render(); if ($('photoManager').open) renderManagerGrid(); toast('照片已恢复'); });
+        toast('照片已删除', false, async () => { if (owner.kind === 'photo') await MemoryLibrary.restore(owner.id); else await MemoryLibrary.restorePhoto(photo.image.id); pendingPhotoId = photo.image.id; await render(); toast('照片已恢复'); });
       } catch (error) { toast(readableError(error), true); }
     }
 
@@ -397,35 +381,6 @@
         await MemoryLibrary.removePhoto(imageId); await render(); showEvent(event.id); toast('图片已删除', false, async () => { await MemoryLibrary.restorePhoto(imageId); await render(); showEvent(event.id); toast('图片已恢复'); });
       } catch (error) { toast(readableError(error), true); }
     }
-
-    $('photoForm').onsubmit = async event => {
-      event.preventDefault(); if (!requireAccess()) return; const button = $('photoSave');
-      if (button.disabled) return; button.disabled = true; button.textContent = '添加中…';
-      let addedCount = 0;
-      let images = [];
-      try {
-        images = await MemoryLibrary.imagesFromFiles($('photoFile').files);
-        const photoDate = $('photoDate').value || MemoryLibrary.today();
-        const photoTitle = $('photoTitle').value.trim() || '一张照片';
-        for (const image of images) {
-          button.textContent = `正在添加 ${addedCount + 1}/${images.length}…`;
-          await MemoryLibrary.put({id:crypto.randomUUID(),kind:'photo',title:photoTitle,date:photoDate,story:'',place:'',images:[image]});
-          addedCount += 1;
-        }
-        pendingPhotoId = images.at(-1)?.id || '';
-        $('photoManager').close(); $('photoForm').reset(); await render(); toast(`${images.length} 张图片已添加`);
-      } catch (error) {
-        if (images.length) await render();
-        if (!cloudReady && images.length) return toast('上传状态暂时无法确认。请刷新照片库，确认后再重试，避免重复。', true);
-        const saved = images.filter(image => records.some(record => record.images?.some(stored => stored.id === image.id)));
-        if (saved.length) {
-          pendingPhotoId = saved.at(-1).id;
-          $('photoManager').close(); $('photoForm').reset();
-          toast(`已确认 ${saved.length} 张上传成功；请只重新选择未上传的照片。${readableError(error)}`, true);
-        } else toast(readableError(error), true);
-      }
-      finally { button.disabled = false; button.textContent = '添加所选图片'; }
-    };
 
     $('eventForm').onsubmit = async event => {
       event.preventDefault(); if (!requireAccess()) return; const button = $('eventSave');
@@ -442,12 +397,15 @@
       } catch (error) {
         if (eventId) await render();
         if (!cloudReady && eventId) return toast('保存状态暂时无法确认。请刷新时间线，确认后再重试，避免重复。', true);
-        const saved = added.filter(image => records.find(record => record.id === eventId)?.images?.some(stored => stored.id === image.id));
+        const savedEvent = records.find(record => record.id === eventId);
+        if (savedEvent) $('eventId').value = eventId;
+        const saved = added.filter(image => savedEvent?.images?.some(stored => stored.id === image.id));
         if (saved.length) {
           pendingPhotoId = saved.at(-1).id;
           $('eventEditor').close(); $('eventImages').value = '';
           toast(`事件已保存，确认有 ${saved.length} 张新照片；请只重新选择未上传的照片。${readableError(error)}`, true);
-        } else toast(readableError(error), true);
+        } else if (savedEvent) toast(`事件文字已保存，照片尚未上传。可以重试添加照片。${readableError(error)}`, true);
+        else toast(readableError(error), true);
       }
       finally { button.disabled = false; button.textContent = '保存事件'; }
     };

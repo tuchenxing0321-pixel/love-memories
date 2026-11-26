@@ -43,7 +43,8 @@ The site is a quiet, long-lived relationship archive. Content leads; interface c
 
 ## Management and Safety
 
-- “Manage photos” opens a focused dialog showing the exact photo that would be deleted, including its title, date, source, and preview.
+- “管理照片”进入独立页面，所有照片在整齐的网格中显示。选择照片后再编辑日期、说明和故事，或删除。
+- 手机可以多次选择照片，先合并到待上传区，再批量提交；上传时无需填写元数据。
 - Deleting a photo, event image, or event provides a seven-second undo action.
 - Add, edit, delete, year filters, photo viewer, and persistence remain real IndexedDB-backed behaviors.
 - Browser-local storage must be described honestly; it is not cross-device synchronization.

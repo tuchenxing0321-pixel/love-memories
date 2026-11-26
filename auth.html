@@ -37,7 +37,7 @@
   <script src="assets/cloudbase-client.js?v=20261110a"></script>
   <script>
     const $=id=>document.getElementById(id);
-    const allowedNext=new Set(['index.html','memories.html','dates.html']);
+    const allowedNext=new Set(['index.html','memories.html','photo-manager.html','dates.html']);
     const requested=new URLSearchParams(location.search).get('next')||'index.html';
     const next=allowedNext.has(requested)?requested:'index.html';
     function message(text,error=false){$('message').textContent=text;$('message').classList.toggle('error',error)}
